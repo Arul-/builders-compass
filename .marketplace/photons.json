@@ -13,8 +13,8 @@
       "license": "MIT",
       "icon": "🧭",
       "source": "../builder-compass.photon.ts",
-      "hash": "sha256:40860ca8d908385d6f39c921b5f546eee317fc9dda2e2e7b4710b325e703abc0",
-      "contentHash": "sha256:82e0ff9e668d4a6f080ca0b064a55ff94ae128b8f12d3b54c4a9528b3d879133",
+      "hash": "sha256:3aef7ad466d2f865038fb36da11a60a42ad03074261e1ee2920bbe333aba104f",
+      "contentHash": "sha256:3aef7ad466d2f865038fb36da11a60a42ad03074261e1ee2920bbe333aba104f",
       "tools": [
         "main",
         "showCompass",
@@ -29,8 +29,7 @@
         "report"
       ],
       "assets": [
-        "builder-compass/ui",
-        "ui/builder-compass.photon.html"
+        "builder-compass/ui"
       ],
       "photonType": "api",
       "features": [

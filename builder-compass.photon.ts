@@ -3,7 +3,7 @@
  * @description Discover your strongest AI-native builder profile, research how people like you make money, and get an evidence-backed next-step roadmap.
  * @icon 🧭
  * @stateful
- * @ui app ./ui/builder-compass.photon.html
+ * @ui builder-compass
  */
 
 type ArchetypeTag =
@@ -187,7 +187,7 @@ export default class BuilderCompass {
 
   /**
    * Open the Builder Compass dashboard
-   * @ui app
+   * @ui builder-compass
    */
   async main(): Promise<CompassSnapshot> {
     return this._snapshot();
@@ -195,7 +195,7 @@ export default class BuilderCompass {
 
   /**
    * Show the interactive Builder Compass dashboard for the current saved state
-   * @ui app
+   * @ui builder-compass
    */
   async showCompass(): Promise<CompassSnapshot> {
     return this._snapshot();
@@ -330,7 +330,7 @@ export default class BuilderCompass {
 
   /**
    * Run the full builder compass flow end to end
-   * @ui app
+   * @ui builder-compass
    */
   async runCompass(): Promise<CompassSnapshot> {
     await this.analyzeIdentity();
