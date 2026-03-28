@@ -2,9 +2,9 @@
   <img src="https://www.tinyfish.ai/TF-Logos/Horizontal%20Logo/SVG/TF_Horizontal.svg" alt="TinyFish" width="360" />
 </p>
 
-# builders-compass
+# Builder's Compass
 
-`builders-compass` is a stateful MCP for one high-stakes builder problem:
+Builder's Compass is a stateful MCP for one high-stakes builder problem:
 
 **you have talent, ideas, and ambition, but you still do not know which path is actually yours.**
 
