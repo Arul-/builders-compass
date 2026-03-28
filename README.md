@@ -14,6 +14,16 @@
 
 ---
 
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=gs6wVcyCaKI">
+    <img src="https://img.youtube.com/vi/gs6wVcyCaKI/maxresdefault.jpg" alt="Builder's Compass Demo" width="600" />
+  </a>
+  <br />
+  <a href="https://www.youtube.com/watch?v=gs6wVcyCaKI">Watch the demo</a>
+</p>
+
+---
+
 ## The Problem
 
 Most builders don't fail because they lack tools. They fail because they can't answer:
