@@ -17,11 +17,19 @@
 
   body {
     background:
-      radial-gradient(circle at top left, rgba(111, 141, 98, 0.14), transparent 24%),
-      radial-gradient(circle at top right, rgba(186, 124, 51, 0.12), transparent 20%),
+      radial-gradient(
+        circle at top left,
+        rgba(111, 141, 98, 0.14),
+        transparent 24%
+      ),
+      radial-gradient(
+        circle at top right,
+        rgba(186, 124, 51, 0.12),
+        transparent 20%
+      ),
       linear-gradient(180deg, #f8f1e7 0%, var(--canvas) 44%, #ecdfcb 100%);
     color: var(--ink);
-    font-family: 'Inter', system-ui, sans-serif;
+    font-family: "Inter", system-ui, sans-serif;
     padding: 24px;
   }
 
@@ -41,7 +49,10 @@
   }
 
   .grid {
-    grid-template-columns: minmax(320px, 0.9fr) minmax(400px, 1.1fr) minmax(320px, 0.92fr);
+    grid-template-columns: minmax(320px, 0.9fr) minmax(400px, 1.1fr) minmax(
+        320px,
+        0.92fr
+      );
     align-items: start;
   }
 
@@ -51,7 +62,11 @@
   }
 
   .panel {
-    background: linear-gradient(180deg, rgba(255, 252, 247, 0.94), rgba(249, 241, 229, 0.96));
+    background: linear-gradient(
+      180deg,
+      rgba(255, 252, 247, 0.94),
+      rgba(249, 241, 229, 0.96)
+    );
     border: 1px solid var(--line);
     border-radius: var(--radius-xl);
     box-shadow: var(--shadow);
@@ -232,9 +247,10 @@
       <div class="eyebrow">Builder Compass / Photon</div>
       <h1>Turn your builder profile into a money map.</h1>
       <p class="lede">
-        Builder Compass stores your profile, classifies your AI-native builder archetype, and
-        researches how people like you are making money on the open web. TinyFish is used when you
-        explicitly rebuild, not every time you open the dashboard.
+        Builder Compass stores your profile, classifies your AI-native builder
+        archetype, and researches how people like you are making money on the
+        open web. TinyFish is used when you explicitly rebuild, not every time
+        you open the dashboard.
       </p>
 
       <div class="metrics">
@@ -257,22 +273,35 @@
       <div>
         <h2 style="margin: 0">How it works</h2>
         <p class="copy" style="margin-top: 10px">
-          Save once, inspect anytime. When your profile changes, update the saved input and rebuild
-          the research deliberately.
+          Save once, inspect anytime. When your profile changes, update the
+          saved input and rebuild the research deliberately.
         </p>
       </div>
       <div class="callout">
-        Bring your own TinyFish API key if you want live market research and open-web evidence.
-        Without it, Builder Compass still gives a heuristic builder model.
+        Bring your TinyFish API key through MCP env config if you want live
+        market research and open-web evidence. Without it, Builder Compass still
+        gives a heuristic builder model.
       </div>
       <div class="toolbar">
-        <button class="primary" data-method="runCompass" data-target="#report-panel">
+        <button
+          class="primary"
+          data-method="runCompass"
+          data-target="#report-panel"
+        >
           Run full compass
         </button>
-        <button class="secondary" data-method="analyzeIdentity" data-target="#identity-panel">
+        <button
+          class="secondary"
+          data-method="analyzeIdentity"
+          data-target="#identity-panel"
+        >
           Refresh identity
         </button>
-        <button class="secondary" data-method="researchMarket" data-target="#market-panel">
+        <button
+          class="secondary"
+          data-method="researchMarket"
+          data-target="#market-panel"
+        >
           Refresh market
         </button>
       </div>
@@ -286,8 +315,8 @@
           <div>
             <h2>Profile intake</h2>
             <p>
-              Minimal input. Persistent state. This form updates the stored profile and clears stale
-              research when your self-model changes.
+              Minimal input. Persistent state. This form updates the stored
+              profile and clears stale research when your self-model changes.
             </p>
           </div>
           <div class="pill">Persistent</div>
@@ -301,7 +330,10 @@
         <div class="section-head">
           <div>
             <h2>Narrative report</h2>
-            <p>The reusable guide you can open later without paying the TinyFish cost again.</p>
+            <p>
+              The reusable guide you can open later without paying the TinyFish
+              cost again.
+            </p>
           </div>
         </div>
         <div class="report" id="report-panel">
@@ -316,8 +348,8 @@
           <div>
             <h2>Identity analysis</h2>
             <p>
-              Builder archetype, strengths, work fit, and risks. Cached until you intentionally
-              rebuild.
+              Builder archetype, strengths, work fit, and risks. Cached until
+              you intentionally rebuild.
             </p>
           </div>
           <div class="pill">Profile model</div>
@@ -332,8 +364,8 @@
           <div>
             <h2>Fit dials</h2>
             <p>
-              Quick read on AI-native leverage, founder energy, execution reliability, and risk
-              load.
+              Quick read on AI-native leverage, founder energy, execution
+              reliability, and risk load.
             </p>
           </div>
         </div>
@@ -348,7 +380,10 @@
         <div class="section-head">
           <div>
             <h2>Money paths</h2>
-            <p>Research-backed routes ranked by fit, speed to money, demand, and sustainability.</p>
+            <p>
+              Research-backed routes ranked by fit, speed to money, demand, and
+              sustainability.
+            </p>
           </div>
           <div class="pill">Market map</div>
         </div>
@@ -365,11 +400,12 @@
           </div>
         </div>
         <div class="callout">
-          Open the same profile any time to get the stored analysis back immediately.
+          Open the same profile any time to get the stored analysis back
+          immediately.
         </div>
         <div class="callout" style="margin-top: 12px">
-          Update the profile only when you’ve actually changed, then rebuild identity and market
-          research.
+          Update the profile only when you’ve actually changed, then rebuild
+          identity and market research.
         </div>
         <div class="callout warn" style="margin-top: 12px">
           TinyFish is a rebuild engine here, not a page-refresh tax.

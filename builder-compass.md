@@ -8,7 +8,11 @@ Builder Compass
 
 ## ⚙️ Configuration
 
-No configuration required.
+
+| Variable | Required | Type | Description |
+|----------|----------|------|-------------|
+| `BUILDER_COMPASS_TINYFISHAPIKEY` | No | any | No description available |
+
 
 
 
@@ -17,7 +21,7 @@ No configuration required.
 | Method | Description |
 |--------|-------------|
 | `main` | Open the Builder Compass dashboard |
-| `saveProfile` | Save the builder profile and optional TinyFish API key |
+| `saveProfile` | Save the builder profile |
 | `analyzeIdentity` | Analyze the builder's identity, strengths, work fit, and risks |
 | `researchMarket` | Research how people with this profile are making money right now |
 | `runCompass` | Run the full builder compass flow end to end |
@@ -43,7 +47,7 @@ Open the Builder Compass dashboard
 
 ### `saveProfile`
 
-Save the builder profile and optional TinyFish API key
+Save the builder profile
 
 
 
