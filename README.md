@@ -4,7 +4,7 @@
 
 # Builder Compass
 
-Builder Compass is a Photon-native strategy agent for AI-era builders, powered by TinyFish.
+Builder Compass is a Photon-native strategy agent for AI-era builders, powered by [TinyFish](https://github.com/tinyfish-io), built with [OpenAI Codex](https://github.com/openai/codex), and delivered through [Photon](https://github.com/portel-dev/photon).
 
 It takes a compact profile, uses TinyFish to research what people with that profile are actually doing on the open web, and turns that into a practical path to money, leverage, and focus.
 
@@ -21,7 +21,21 @@ TinyFish is what makes it real:
 
 TinyFish's official positioning is "enterprise infrastructure for AI web agents" and "1,000 operations. One API." Builder Compass uses that strength in a focused, personal way: not to scrape random websites for vanity data, but to help a builder understand which paths are realistic, fast, and aligned.
 
-Source: [TinyFish official site](https://www.tinyfish.ai/)
+Source: [TinyFish official site](https://www.tinyfish.ai/) and [TinyFish GitHub](https://github.com/tinyfish-io)
+
+## Hackathon Stack
+
+This project is intentionally built around the exact stack the hackathon cares about:
+
+- [TinyFish](https://github.com/tinyfish-io): the open-web research layer that turns a compact builder profile into live market intelligence
+- [OpenAI Codex](https://github.com/openai/codex): the coding agent used to build, iterate, test, and tighten the product quickly
+- [Photon](https://github.com/portel-dev/photon): the runtime that made it practical to ship a stateful MCP, rich UI, and reusable workflow in one product
+
+Builder Compass exists because these three pieces fit together unusually well:
+
+- TinyFish answers "what is true on the web right now?"
+- Codex accelerates "how do we build and refine this product fast?"
+- Photon simplifies "how do we turn it into a usable MCP with state and UI?"
 
 ## What Builder Compass Gives You
 
@@ -93,6 +107,41 @@ npx @portel/photon Arul-/builders-compass/builder-compass report
 ```
 
 Then get the MCP config:
+
+```bash
+npx @portel/photon info builder-compass --mcp
+```
+
+## Ways To Use Builder Compass
+
+### MCP-first
+
+This is the main experience and the path used for the demo.
+
+- install the photon
+- add the generated MCP config to your client
+- pass `BUILDER_COMPASS_TINYFISH_API_KEY` through the MCP env config
+- let the client capture a compact profile and drive the workflow
+
+### Beam UI
+
+Builder Compass also has a rich Photon UI for a visual dashboard experience.
+
+```bash
+npx @portel/photon beam
+```
+
+Then open Builder Compass inside Beam.
+
+### CLI
+
+CLI support exists for local use and inspection, even though the demo focuses on MCP.
+
+```bash
+BUILDER_COMPASS_TINYFISH_API_KEY=YOUR_KEY npx @portel/photon mcp builder-compass
+```
+
+You can also inspect MCP config with:
 
 ```bash
 npx @portel/photon info builder-compass --mcp
@@ -183,8 +232,38 @@ It is a strategy layer between:
 
 That is why the combination matters:
 
-- Photon gives you state, UI, MCP delivery, and reusable workflows
-- TinyFish gives you live web research and evidence-backed market reality
+- [Photon](https://github.com/portel-dev/photon) gives you state, UI, MCP delivery, and reusable workflows
+- [TinyFish](https://github.com/tinyfish-io) gives you live web research and evidence-backed market reality
+- [OpenAI Codex](https://github.com/openai/codex) compresses the build loop so the product can be shaped, shipped, and improved quickly
+
+## How Codex Was Used
+
+Builder Compass was built with [OpenAI Codex](https://github.com/openai/codex) as an active coding partner, not just as a writing assistant.
+
+Codex was used to:
+
+- shape the photon architecture and method design
+- iterate on the stateful profile and caching flow
+- refine the MCP-facing capture contract
+- improve the UI structure and dashboard composition
+- test installation and MCP configuration flows
+- tighten docs and packaging under hackathon time pressure
+
+In practice, Codex helped compress the time from idea to runnable MCP product while Photon handled the runtime model and TinyFish supplied the live-web intelligence.
+
+## How Photon Simplified This
+
+[Photon](https://github.com/portel-dev/photon) is the reason this could stay compact.
+
+Instead of building separate layers for:
+
+- MCP server plumbing
+- local state management
+- UI rendering
+- install/distribution
+- configuration handling
+
+Builder Compass could stay as one stateful photon with custom UI and a clean install story.
 
 ## Built For
 
