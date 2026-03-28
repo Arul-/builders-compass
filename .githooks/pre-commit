@@ -8,10 +8,9 @@ if git diff --cached --name-only | grep -qE '\.photon\.ts$|\.marketplace/|\.clau
 
   # Run photon maker sync with --claude-code to generate plugin files
   if photon maker sync --dir . --claude-code; then
-    # Stage generated files (not README.md — it has custom content)
+    # Stage generated files, then undo any README.md changes from maker sync
     git add .marketplace/photons.json builder-compass.md .claude-plugin/ 2>/dev/null
-    # Restore README.md if maker sync overwrote it
-    git checkout -- README.md 2>/dev/null
+    git checkout HEAD -- README.md 2>/dev/null
     echo "✅ Marketplace and Claude Code plugin synced and staged"
   else
     echo "❌ Failed to sync marketplace"
