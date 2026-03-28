@@ -1,632 +1,551 @@
 <style>
   :root {
     --canvas: var(--color-background-primary, var(--color-bg, #ffffff));
-    --canvas-elevated: var(
-      --color-background-secondary,
-      var(--color-bg-elevated, rgba(255, 255, 255, 0.92))
-    );
-    --canvas-soft: var(
-      --color-background-tertiary,
-      var(--color-bg-subtle, rgba(255, 255, 255, 0.72))
-    );
+    --canvas-elevated: var(--color-background-secondary, var(--color-bg-elevated, rgba(255,255,255,0.92)));
     --ink: var(--color-text-primary, var(--color-text, #201d18));
     --muted: var(--color-text-secondary, var(--color-text-muted, #6c665d));
     --accent: var(--color-text-info, var(--color-accent, #38452f));
     --success: var(--color-text-success, var(--color-success, #6f8d62));
     --warning: var(--color-text-warning, var(--color-warning, #ba7c33));
     --danger: var(--color-text-danger, var(--color-error, #9d5a42));
-    --line: var(
-      --color-border-primary,
-      var(--color-border, rgba(68, 53, 36, 0.12))
-    );
-    --line-soft: var(--color-border-secondary, rgba(68, 53, 36, 0.08));
-    --accent-bg: var(
-      --color-background-info,
-      color-mix(in srgb, var(--accent) 12%, transparent)
-    );
-    --success-bg: var(
-      --color-background-success,
-      color-mix(in srgb, var(--success) 12%, transparent)
-    );
-    --warning-bg: var(
-      --color-background-warning,
-      color-mix(in srgb, var(--warning) 12%, transparent)
-    );
-    --danger-bg: var(
-      --color-background-danger,
-      color-mix(in srgb, var(--danger) 10%, transparent)
-    );
-    --shadow: 0 18px 48px color-mix(in srgb, var(--ink) 10%, transparent);
-    --radius-xl: 24px;
-    --radius-lg: 18px;
-    --radius-md: 14px;
+    --line: var(--color-border-primary, var(--color-border, rgba(68,53,36,0.12)));
+    --accent-bg: var(--color-background-info, color-mix(in srgb, var(--accent) 12%, transparent));
+    --success-bg: var(--color-background-success, color-mix(in srgb, var(--success) 12%, transparent));
+    --warning-bg: var(--color-background-warning, color-mix(in srgb, var(--warning) 12%, transparent));
   }
 
-  * {
-    box-sizing: border-box;
-  }
+  * { box-sizing: border-box; }
 
   body {
     margin: 0;
     background: var(--canvas);
     color: var(--ink);
     font-family: var(--font-sans, "Inter", system-ui, sans-serif);
-    padding: 16px;
+    padding: 20px;
     height: 100vh;
     overflow-y: auto;
   }
 
-  .shell {
-    max-width: 1180px;
+  .wizard {
+    max-width: 640px;
     margin: 0 auto;
     display: grid;
-    gap: 14px;
+    gap: 16px;
   }
 
-  .panel {
-    background: linear-gradient(180deg, var(--canvas-elevated), var(--canvas-soft));
-    border: 1px solid var(--line);
-    border-radius: var(--radius-xl);
-    box-shadow: var(--shadow);
-    padding: 18px;
-  }
-
-  .hero {
-    display: grid;
-    gap: 10px;
-  }
-
-  .eyebrow,
-  .pill {
-    display: inline-flex;
+  .header {
+    display: flex;
     align-items: center;
-    gap: 8px;
-    border-radius: 999px;
-    font:
-      600 12px/1 var(--font-mono, ui-monospace),
-      monospace;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .header h1 {
+    margin: 0;
+    font-size: 1.3rem;
+    line-height: 1.2;
+  }
+
+  .header .tag {
+    font: 600 11px/1 var(--font-mono, ui-monospace, monospace);
     letter-spacing: 0.05em;
     text-transform: uppercase;
-  }
-
-  .eyebrow {
-    padding: 7px 12px;
-    background: var(--accent-bg);
-    border: 1px solid var(--line);
-    color: var(--accent);
-  }
-
-  h1,
-  h2,
-  h3 {
-    margin: 0;
-  }
-
-  .hero h1 {
-    font-size: clamp(1.4rem, 3vw, 2.2rem);
-    line-height: 1.05;
-    max-width: 16ch;
-  }
-
-  .copy {
-    color: var(--muted);
-    line-height: 1.65;
-  }
-
-  .hero-grid {
-    display: grid;
-    grid-template-columns: minmax(0, 1.3fr) minmax(300px, 0.8fr);
-    gap: 18px;
-  }
-
-  .stack {
-    display: grid;
-    gap: 12px;
-  }
-
-  .callout {
-    padding: 16px;
-    border-radius: var(--radius-lg);
-    background: var(--accent-bg);
-    border: 1px solid var(--line);
-    color: var(--muted);
-  }
-
-  .callout.warn {
-    background: var(--danger-bg);
-    border-color: var(--color-border-danger, var(--line));
-  }
-
-  .metrics {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 12px;
-  }
-
-  .metric {
-    padding: 16px;
-    border-radius: var(--radius-lg);
-    background: var(--canvas-soft);
-    border: 1px solid var(--line-soft);
-  }
-
-  .metric label {
-    display: block;
-    color: var(--muted);
-    font-size: 12px;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    margin-bottom: 8px;
-  }
-
-  .metric [data-slot] {
-    font-size: 1.5rem;
-    font-weight: 700;
-  }
-
-  .tabs {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-
-  .tab-button {
-    border: 1px solid var(--line);
-    background: var(--canvas-soft);
-    color: var(--ink);
+    padding: 5px 10px;
     border-radius: 999px;
-    padding: 10px 14px;
-    cursor: pointer;
-    font-weight: 600;
+    background: var(--accent-bg);
+    color: var(--accent);
+    border: 1px solid var(--line);
+    white-space: nowrap;
   }
 
-  .tab-button.active {
+  /* Steps bar */
+  .steps {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 6px;
+  }
+
+  .step {
+    text-align: center;
+    padding: 10px 8px;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+    background: var(--canvas-elevated);
+    cursor: pointer;
+    transition: all 0.15s;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted);
+  }
+
+  .step.active {
     background: var(--accent);
     color: var(--color-text-inverse, #fff);
     border-color: transparent;
   }
 
-  .tab-button:disabled {
-    opacity: 0.45;
+  .step.done {
+    background: var(--success-bg);
+    color: var(--success);
+    border-color: color-mix(in srgb, var(--success) 30%, transparent);
+  }
+
+  .step.locked {
+    opacity: 0.4;
     cursor: not-allowed;
   }
 
-  .tab-panel {
-    display: none;
-    gap: 18px;
+  .step small {
+    display: block;
+    font-weight: 400;
+    font-size: 11px;
+    margin-top: 2px;
+    opacity: 0.75;
   }
 
-  .tab-panel.active {
-    display: grid;
+  /* Panels */
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  .card {
+    background: var(--canvas-elevated);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 20px;
   }
 
-  .content-grid {
-    display: grid;
-    grid-template-columns: minmax(320px, 0.9fr) minmax(0, 1.1fr);
-    gap: 18px;
-    align-items: start;
+  .card h2 {
+    margin: 0 0 4px;
+    font-size: 1.05rem;
   }
 
-  .section-head {
-    display: flex;
-    justify-content: space-between;
-    gap: 12px;
-    align-items: flex-start;
-    margin-bottom: 14px;
-  }
-
-  .section-head p {
-    margin-top: 8px;
+  .card .subtitle {
     color: var(--muted);
-    line-height: 1.55;
+    font-size: 13px;
+    line-height: 1.5;
+    margin-bottom: 16px;
   }
 
-  .pill {
-    color: var(--warning);
-    padding: 6px 10px;
-    background: var(--warning-bg);
-    border: 1px solid var(--color-border-warning, var(--line));
+  /* Profile fields */
+  .field {
+    margin-bottom: 12px;
   }
 
-  .embed,
-  .report,
-  .panel-slot {
-    min-height: 120px;
-    border-radius: var(--radius-lg);
-    background: var(--canvas-soft);
-    border: 1px solid var(--line-soft);
-    padding: 16px;
+  .field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    margin-bottom: 4px;
   }
 
-  .report {
-    min-height: 180px;
+  .field .value {
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--ink);
   }
 
-  .toolbar {
+  .field .empty {
+    font-style: italic;
+    color: var(--muted);
+    opacity: 0.6;
+  }
+
+  /* Gauges */
+  .gauges {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin: 12px 0;
+  }
+
+  .gauge {
+    padding: 12px;
+    border-radius: 12px;
+    background: var(--canvas);
+    border: 1px solid var(--line);
+  }
+
+  .gauge-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 6px;
+  }
+
+  .gauge-bar {
+    height: 6px;
+    border-radius: 3px;
+    background: var(--line);
+    overflow: hidden;
+  }
+
+  .gauge-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.4s;
+  }
+
+  .gauge-value {
+    font-size: 18px;
+    font-weight: 700;
+    margin-top: 4px;
+  }
+
+  /* Tags */
+  .tags {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 6px;
+    margin: 8px 0;
   }
 
-  .toolbar button {
-    border-radius: 14px;
-    padding: 11px 15px;
+  .tag-pill {
+    font-size: 12px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 999px;
     border: 1px solid var(--line);
-    background: var(--canvas-soft);
+    background: var(--canvas);
     color: var(--ink);
-    font-weight: 600;
   }
 
-  .toolbar .primary {
-    background: var(--accent);
-    color: var(--color-text-inverse, #fff);
-    border-color: transparent;
+  .tag-pill.accent { background: var(--accent-bg); color: var(--accent); }
+  .tag-pill.success { background: var(--success-bg); color: var(--success); }
+  .tag-pill.warning { background: var(--warning-bg); color: var(--warning); }
+
+  /* Money paths */
+  .path-card {
+    padding: 14px;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+    background: var(--canvas);
+    margin-bottom: 10px;
   }
 
-  .empty {
-    padding: 16px;
-    border-radius: var(--radius-lg);
-    border: 1px dashed var(--line);
+  .path-card h3 {
+    margin: 0 0 6px;
+    font-size: 14px;
+  }
+
+  .path-card .meta {
+    display: flex;
+    gap: 12px;
+    font-size: 12px;
     color: var(--muted);
-    background: var(--canvas-soft);
+    margin-bottom: 8px;
   }
 
-  @media (max-width: 980px) {
-    .hero-grid,
-    .content-grid {
-      grid-template-columns: 1fr;
-    }
+  .path-card p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--muted);
+  }
 
-    .metrics {
-      grid-template-columns: 1fr;
-    }
+  /* Markdown report */
+  .report {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--ink);
+  }
+
+  .report h1, .report h2, .report h3 { margin: 16px 0 8px; }
+  .report h1 { font-size: 1.2rem; }
+  .report h2 { font-size: 1.05rem; }
+  .report h3 { font-size: 0.95rem; }
+  .report ul { padding-left: 20px; margin: 8px 0; }
+  .report li { margin-bottom: 4px; }
+  .report strong { color: var(--ink); }
+  .report p { margin: 8px 0; }
+
+  .empty-state {
+    text-align: center;
+    padding: 32px 16px;
+    color: var(--muted);
+    font-size: 14px;
+  }
+
+  .loading {
+    text-align: center;
+    padding: 24px;
+    color: var(--muted);
+    font-size: 14px;
   }
 </style>
 
-<div class="shell">
-  <section class="panel hero">
-    <div class="eyebrow">Builder Compass / MCP-first</div>
-    <div class="hero-grid">
-      <div class="stack">
-        <h1>Turn builder intel into a plan of action.</h1>
-        <p class="copy">
-          The MCP client brings the first layer of user intel. Builder Compass
-          turns that into a profile, then uses TinyFish to research how
-          successful builders with that profile are winning on the open web.
-        </p>
-        <div class="metrics">
-          <div class="metric">
-            <label>Profile</label>
-            <div data-slot="profile-state">Awaiting</div>
-          </div>
-          <div class="metric">
-            <label>Identity</label>
-            <div data-slot="identity-state">Locked</div>
-          </div>
-          <div class="metric">
-            <label>Market</label>
-            <div data-slot="market-state">Locked</div>
-          </div>
-        </div>
-      </div>
-      <div class="stack">
-        <div class="callout">
-          Save the profile first. Identity and Market unlock only after the
-          earlier steps are complete.
-        </div>
-        <div class="callout" id="tinyfish-callout">
-          TinyFish key not detected. Builder Compass can still show heuristic
-          output, but the real market pass depends on live TinyFish research.
-        </div>
+<div class="wizard">
+  <div class="header">
+    <h1>Builder's Compass</h1>
+    <span class="tag" id="tinyfish-tag">Heuristic mode</span>
+  </div>
+
+  <div class="steps">
+    <div class="step active" data-step="profile">
+      Profile
+      <small id="step-profile-status">awaiting</small>
+    </div>
+    <div class="step locked" data-step="identity">
+      Identity
+      <small id="step-identity-status">locked</small>
+    </div>
+    <div class="step locked" data-step="market">
+      Market
+      <small id="step-market-status">locked</small>
+    </div>
+  </div>
+
+  <!-- Step 1: Profile -->
+  <div class="panel active" data-panel="profile">
+    <div class="card">
+      <h2>Builder profile</h2>
+      <p class="subtitle">The MCP client captures your profile from conversation context. Save it once, come back any time.</p>
+      <div id="profile-fields">
+        <div class="empty-state">No profile saved yet. Ask your MCP client to save your profile.</div>
       </div>
     </div>
-  </section>
+  </div>
 
-  <section class="panel">
-    <div class="tabs">
-      <button class="tab-button active" data-tab="profile">1. Profile</button>
-      <button class="tab-button" data-tab="identity" disabled>2. Identity</button>
-      <button class="tab-button" data-tab="market" disabled>3. Market</button>
-    </div>
-  </section>
-
-  <section class="tab-panel active" data-panel="profile">
-    <div class="content-grid">
-      <div class="panel">
-        <div class="section-head">
-          <div>
-            <h2>Profile intake</h2>
-            <p>
-              The client should pass a compact factual builder profile. Save it
-              once, then come back to the same instance any time.
-            </p>
-          </div>
-          <div class="pill">Required first</div>
-        </div>
-        <div class="embed">
-          <div data-method="saveProfile" data-trigger="none"></div>
-        </div>
-      </div>
-
-      <div class="panel">
-        <div class="section-head">
-          <div>
-            <h2>What this tab does</h2>
-            <p>
-              This is the input Builder Compass depends on before it can
-              classify identity or research the market.
-            </p>
-          </div>
-        </div>
-        <div class="stack">
-          <div class="callout">
-            The MCP client should infer as much as possible from memory and
-            recent conversation, then ask only for missing high-value facts.
-          </div>
-          <div class="callout">
-            Saving a changed profile intentionally invalidates stale identity
-            and market research.
-          </div>
-          <div class="report">
-            <div id="snapshot-preview" class="copy" style="white-space: pre-wrap; font-size: 13px;"></div>
-          </div>
-        </div>
+  <!-- Step 2: Identity -->
+  <div class="panel" data-panel="identity">
+    <div class="card">
+      <h2 id="identity-title">Identity analysis</h2>
+      <p class="subtitle" id="identity-summary">Archetype, strengths, work fit, and risk patterns.</p>
+      <div id="identity-content">
+        <div class="empty-state">Run identity analysis to classify your builder profile.</div>
       </div>
     </div>
-  </section>
+  </div>
 
-  <section class="tab-panel" data-panel="identity">
-    <div class="content-grid">
-      <div class="panel">
-        <div class="section-head">
-          <div>
-            <h2>Identity analysis</h2>
-            <p>
-              Builder archetype, strengths, work fit, and risk pattern. Rebuild
-              this only when the profile changes or you want refreshed TinyFish
-              evidence.
-            </p>
-          </div>
-          <div class="pill">Unlocked after profile</div>
-        </div>
-        <div class="toolbar" style="margin-bottom: 14px">
-          <button class="primary" data-method="analyzeIdentity">
-            Analyze profile
-          </button>
-        </div>
-        <div class="panel-slot">
-          <div data-method="strengthMatrix" data-trigger="none"></div>
-        </div>
-      </div>
-
-      <div class="stack">
-        <div class="panel">
-          <div class="section-head">
-            <div>
-              <h2>Fit overview</h2>
-              <p>
-                Quick read on leverage, execution reliability, founder energy,
-                and risk load.
-              </p>
-            </div>
-          </div>
-          <div class="panel-slot">
-            <div data-method="fitOverview" data-trigger="none"></div>
-          </div>
-        </div>
-
-        <div class="panel">
-          <div class="section-head">
-            <div>
-              <h2>Identity report</h2>
-              <p>Summary output after Builder Compass classifies the profile.</p>
-            </div>
-          </div>
-          <div class="report">
-            <div data-method="report" data-trigger="none"></div>
-          </div>
-        </div>
+  <!-- Step 3: Market -->
+  <div class="panel" data-panel="market">
+    <div class="card">
+      <h2>Market paths</h2>
+      <p class="subtitle" id="market-summary">How builders like you are making money right now.</p>
+      <div id="market-content">
+        <div class="empty-state">Run market research to discover your best money paths.</div>
       </div>
     </div>
-  </section>
 
-  <section class="tab-panel" data-panel="market">
-    <div class="content-grid">
-      <div class="panel">
-        <div class="section-head">
-          <div>
-            <h2>Market research</h2>
-            <p>
-              TinyFish researches how successful builders of this type are
-              positioning themselves, getting clients, or selling products.
-            </p>
-          </div>
-          <div class="pill">Unlocked after identity</div>
-        </div>
-        <div class="toolbar" style="margin-bottom: 14px">
-          <button class="primary" data-method="researchMarket">
-            Research market
-          </button>
-          <button data-method="runCompass">Run full compass</button>
-        </div>
-        <div class="panel-slot">
-          <div data-method="moneyPaths" data-trigger="none"></div>
-        </div>
-      </div>
-
-      <div class="stack">
-        <div class="panel">
-          <div class="section-head">
-            <div>
-              <h2>Strategic guide</h2>
-              <p>
-                This is the reusable narrative output you come back to after the
-                research is done.
-              </p>
-            </div>
-          </div>
-          <div class="report">
-            <div data-method="report" data-trigger="none"></div>
-          </div>
-        </div>
-
-        <div class="panel">
-          <div class="section-head">
-            <div>
-              <h2>Usage model</h2>
-              <p>Builder Compass is meant to be stateful and reusable.</p>
-            </div>
-          </div>
-          <div class="callout">
-            Open the same instance any time to get the stored profile and
-            results back instantly.
-          </div>
-          <div class="callout warn" style="margin-top: 12px">
-            TinyFish should be treated as a deliberate rebuild step, not a
-            page-refresh tax.
-          </div>
-        </div>
+    <div class="card" style="margin-top: 12px;" id="report-card">
+      <h2>Strategic guide</h2>
+      <div class="report" id="report-content">
+        <div class="empty-state">Complete the compass to generate your strategic guide.</div>
       </div>
     </div>
-  </section>
+  </div>
 </div>
 
 <script>
-  const state = {
-    snapshot: photon.toolOutput || null,
-    activeTab: "profile",
-    autoPhase: "idle",
-  };
+  const state = { snapshot: null, activeStep: "profile" };
 
-  const tabButtons = Array.from(document.querySelectorAll("[data-tab]"));
-  const tabPanels = Array.from(document.querySelectorAll("[data-panel]"));
-  const slots = {
-    profile: document.querySelector('[data-slot="profile-state"]'),
-    identity: document.querySelector('[data-slot="identity-state"]'),
-    market: document.querySelector('[data-slot="market-state"]'),
-    tinyfishCallout: document.getElementById("tinyfish-callout"),
-  };
+  const steps = Array.from(document.querySelectorAll("[data-step]"));
+  const panels = Array.from(document.querySelectorAll("[data-panel]"));
 
-  function getLocks(snapshot) {
-    const ready = snapshot?.readyState || {};
+  function labelize(s) {
+    return s.replace(/-/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+  }
+
+  function pct(v) { return Math.round((v || 0) * 100); }
+
+  function gaugeColor(v) {
+    if (v >= 0.8) return "var(--success)";
+    if (v >= 0.5) return "var(--warning)";
+    return "var(--danger)";
+  }
+
+  function simpleMarkdown(md) {
+    if (!md) return "";
+    return md
+      .replace(/^### (.+)$/gm, "<h3>$1</h3>")
+      .replace(/^## (.+)$/gm, "<h2>$1</h2>")
+      .replace(/^# (.+)$/gm, "<h1>$1</h1>")
+      .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+      .replace(/^- (.+)$/gm, "<li>$1</li>")
+      .replace(/(<li>.*<\/li>\n?)+/g, "<ul>$&</ul>")
+      .replace(/\n\n/g, "</p><p>")
+      .replace(/^(?!<[hul])(.+)$/gm, "<p>$1</p>");
+  }
+
+  function getLocks(s) {
+    const r = s?.readyState || {};
     return {
-      profileReady: Boolean(ready.hasProfile),
-      identityReady: Boolean(ready.hasIdentity),
-      marketReady: Boolean(ready.hasMarket),
-      tinyfishReady: Boolean(snapshot?.apiKeyConfigured),
+      profile: Boolean(r.hasProfile),
+      identity: Boolean(r.hasIdentity),
+      market: Boolean(r.hasMarket),
+      tinyfish: Boolean(s?.apiKeyConfigured),
     };
   }
 
-  function updateTabs() {
-    const locks = getLocks(state.snapshot);
-    tabButtons.forEach((button) => {
-      const tab = button.dataset.tab;
-      const locked =
-        (tab === "identity" && !locks.profileReady) ||
-        (tab === "market" && !locks.identityReady);
-      button.disabled = locked;
-      button.classList.toggle("active", tab === state.activeTab);
+  function render() {
+    const s = state.snapshot;
+    const locks = getLocks(s);
+
+    // TinyFish tag
+    const tf = document.getElementById("tinyfish-tag");
+    tf.textContent = locks.tinyfish ? "TinyFish active" : "Heuristic mode";
+
+    // Step indicators
+    steps.forEach(el => {
+      const step = el.dataset.step;
+      const isActive = step === state.activeStep;
+      const isDone = (step === "profile" && locks.profile) ||
+                     (step === "identity" && locks.identity) ||
+                     (step === "market" && locks.market);
+      const isLocked = (step === "identity" && !locks.profile) ||
+                       (step === "market" && !locks.identity);
+
+      el.className = "step" + (isActive ? " active" : "") + (isDone && !isActive ? " done" : "") + (isLocked ? " locked" : "");
     });
 
-    tabPanels.forEach((panel) => {
-      panel.classList.toggle("active", panel.dataset.panel === state.activeTab);
-    });
+    document.getElementById("step-profile-status").textContent = locks.profile ? "saved" : "awaiting";
+    document.getElementById("step-identity-status").textContent = locks.identity ? "ready" : locks.profile ? "available" : "locked";
+    document.getElementById("step-market-status").textContent = locks.market ? "ready" : locks.identity ? "available" : "locked";
 
-    slots.profile.textContent = locks.profileReady ? "Saved" : "Awaiting";
-    slots.identity.textContent = locks.identityReady
-      ? "Ready"
-      : locks.profileReady
-        ? "Available"
-        : "Locked";
-    slots.market.textContent = locks.marketReady
-      ? "Ready"
-      : locks.identityReady
-        ? "Available"
-        : "Locked";
+    // Panels
+    panels.forEach(p => p.classList.toggle("active", p.dataset.panel === state.activeStep));
 
-    const preview = document.getElementById("snapshot-preview");
-    if (preview && state.snapshot) {
-      const p = state.snapshot.profile;
-      if (locks.profileReady) {
-        preview.textContent = [
-          p.name ? "Name: " + p.name : "",
-          p.headline ? "Headline: " + p.headline : "",
-          p.goalNow ? "Goal: " + p.goalNow : "",
-          p.recentWork ? "Recent work: " + p.recentWork : "",
-        ].filter(Boolean).join("\n");
-      } else {
-        preview.textContent = "No profile saved yet. Use the MCP client or method cards below to save a profile.";
-      }
+    if (!s) return;
+
+    // Profile panel
+    if (locks.profile) {
+      const p = s.profile;
+      const fields = [
+        ["Name", p.name],
+        ["Headline", p.headline],
+        ["Goal now", p.goalNow],
+        ["Recent work", p.recentWork],
+        ["Energizing work", p.energizingWork],
+        ["Constraints", p.constraints],
+      ].filter(([, v]) => v);
+
+      document.getElementById("profile-fields").innerHTML = fields.map(([label, value]) =>
+        `<div class="field"><label>${label}</label><div class="value">${value}</div></div>`
+      ).join("");
     }
 
-    slots.tinyfishCallout.textContent = locks.tinyfishReady
-      ? "TinyFish key detected. Builder Compass can run live profile and market research."
-      : "TinyFish key not detected. Builder Compass can still show heuristic output, but the live research tabs are much stronger with TinyFish configured.";
-    slots.tinyfishCallout.classList.toggle("warn", !locks.tinyfishReady);
+    // Identity panel
+    if (locks.identity) {
+      const id = s.identity;
+      document.getElementById("identity-title").textContent = id.title || "Identity analysis";
+      document.getElementById("identity-summary").textContent = id.identitySummary || "";
+
+      let html = "";
+
+      // Archetype tags
+      if (id.archetypeTags?.length) {
+        html += `<div class="tags">${id.archetypeTags.map(t => `<span class="tag-pill accent">${labelize(t)}</span>`).join("")}</div>`;
+      }
+
+      // Strength gauges
+      if (id.strengthMatrix?.length) {
+        html += `<div class="gauges">`;
+        for (const row of id.strengthMatrix) {
+          html += `<div class="gauge">
+            <div class="gauge-label">${row.category}</div>
+            <div class="gauge-bar"><div class="gauge-fill" style="width:${pct(row.score)}%;background:${gaugeColor(row.score)}"></div></div>
+            <div class="gauge-value" style="color:${gaugeColor(row.score)}">${pct(row.score)}%</div>
+          </div>`;
+        }
+        html += `</div>`;
+      }
+
+      // Risk tags
+      if (id.riskTags?.length) {
+        html += `<div style="margin-top:12px"><label style="font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em">Risk patterns</label>`;
+        html += `<div class="tags">${id.riskTags.map(t => `<span class="tag-pill warning">${labelize(t)}</span>`).join("")}</div></div>`;
+      }
+
+      // Work fit tags
+      if (id.workFitTags?.length) {
+        html += `<div style="margin-top:8px"><label style="font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em">Work fit</label>`;
+        html += `<div class="tags">${id.workFitTags.map(t => `<span class="tag-pill success">${labelize(t)}</span>`).join("")}</div></div>`;
+      }
+
+      document.getElementById("identity-content").innerHTML = html || `<div class="empty-state">No identity data yet.</div>`;
+    }
+
+    // Market panel
+    if (locks.market) {
+      const m = s.market;
+      let html = "";
+
+      if (m.topPaths?.length) {
+        for (const path of m.topPaths) {
+          html += `<div class="path-card">
+            <h3>${path.title}</h3>
+            <div class="meta">
+              <span>Fit ${pct(path.fitScore)}%</span>
+              <span>Speed ${pct(path.speedToMoney)}%</span>
+              <span>Demand ${pct(path.marketDemand)}%</span>
+            </div>
+            <p>${path.whyItFits}</p>
+          </div>`;
+        }
+      }
+
+      if (m.nextMoves?.length) {
+        html += `<div style="margin-top:8px"><label style="font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em">Next moves</label>`;
+        html += `<ul style="padding-left:20px;margin:8px 0">${m.nextMoves.map(s => `<li style="font-size:13px;margin-bottom:4px;color:var(--ink)">${s}</li>`).join("")}</ul></div>`;
+      }
+
+      document.getElementById("market-content").innerHTML = html || `<div class="empty-state">No market data yet.</div>`;
+      document.getElementById("market-summary").textContent = m.researchSummary || "How builders like you are making money right now.";
+    }
+
+    // Report (shown in market panel)
+    if (locks.market && locks.identity) {
+      photon.callTool("report", {}).then(md => {
+        if (typeof md === "string" && md.length > 10) {
+          document.getElementById("report-content").innerHTML = simpleMarkdown(md);
+        }
+      }).catch(() => {});
+    }
   }
 
-  function activateTab(tab) {
+  function goToStep(step) {
     const locks = getLocks(state.snapshot);
-    if (tab === "identity" && !locks.profileReady) return;
-    if (tab === "market" && !locks.identityReady) return;
-    state.activeTab = tab;
-    updateTabs();
+    if (step === "identity" && !locks.profile) return;
+    if (step === "market" && !locks.identity) return;
+    state.activeStep = step;
+    render();
   }
 
-  async function maybeAutoAdvance() {
-    const locks = getLocks(state.snapshot);
-    if (state.autoPhase !== "idle") return;
-
-    if (locks.profileReady && !locks.identityReady) {
-      state.autoPhase = "identity";
-      try {
-        state.snapshot = await photon.callTool('analyzeIdentity', {});
-      } finally {
-        state.autoPhase = "idle";
-      }
-      return;
-    }
-
-    if (locks.identityReady && !locks.marketReady) {
-      state.autoPhase = "market";
-      try {
-        state.snapshot = await photon.callTool('researchMarket', {});
-      } finally {
-        state.autoPhase = "idle";
-      }
-    }
-  }
-
-  tabButtons.forEach((button) => {
-    button.addEventListener("click", () => activateTab(button.dataset.tab));
-  });
+  steps.forEach(el => el.addEventListener("click", () => goToStep(el.dataset.step)));
 
   photon.onResult((result) => {
     if (!result) return;
     state.snapshot = result;
     const locks = getLocks(result);
-    if (locks.marketReady) state.activeTab = "market";
-    else if (locks.identityReady) state.activeTab = "identity";
-    updateTabs();
-    queueMicrotask(() => {
-      maybeAutoAdvance().catch(() => {});
-    });
+    if (locks.market) state.activeStep = "market";
+    else if (locks.identity) state.activeStep = "identity";
+    else if (locks.profile) state.activeStep = "profile";
+    render();
   });
 
   photon.onThemeChange(() => {
     document.documentElement.dataset.theme = photon.theme;
   });
 
-  updateTabs();
+  // Hydrate on load
+  if (photon.toolOutput) {
+    state.snapshot = photon.toolOutput;
+    const locks = getLocks(state.snapshot);
+    if (locks.market) state.activeStep = "market";
+    else if (locks.identity) state.activeStep = "identity";
+  }
+  render();
 
-  // Fetch current state on load — Claude Desktop may not relay tool results
-  // to the iframe, so we proactively call main() to hydrate the UI
-  photon.callTool('main', {}).then((result) => {
+  photon.callTool("main", {}).then((result) => {
     if (!result) return;
     state.snapshot = result;
     const locks = getLocks(result);
-    if (locks.marketReady) state.activeTab = "market";
-    else if (locks.identityReady) state.activeTab = "identity";
-    updateTabs();
+    if (locks.market) state.activeStep = "market";
+    else if (locks.identity) state.activeStep = "identity";
+    render();
   }).catch(() => {});
 </script>
