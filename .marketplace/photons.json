@@ -13,8 +13,8 @@
       "license": "MIT",
       "icon": "🧭",
       "source": "../builder-compass.photon.ts",
-      "hash": "sha256:3a2b6c270cd673e6d24273fc78015711bda9daf4b56128e1b4c386b636204fc8",
-      "contentHash": "sha256:2cafb8bccb975ae05c741e12b07fcd65f2a2d7de8a28e603e47c2f159be901d9",
+      "hash": "sha256:af0bc33eabf605e1945eae457eb58a6c3bb35374778222d70ed38ff29ea56891",
+      "contentHash": "sha256:e8b1893dcb761ce2b422fc33f19100bd9b0a1202c48a546fca9a97118aa40131",
       "tools": [
         "main",
         "saveProfile",

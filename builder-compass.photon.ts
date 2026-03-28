@@ -68,20 +68,20 @@ interface LinkEvidence {
 }
 
 interface ProfileInput {
-  /** Builder's real name or stable public handle. Prefer what the MCP client already knows. */
-  name: string;
-  /** One-line current positioning statement. Keep it factual, not aspirational. */
-  headline: string;
-  /** What the builder is optimizing for right now: income, startup wedge, specialization, etc. */
-  goalNow: string;
-  /** Recent projects, shipped work, or repeated patterns the builder actually returns to. */
-  recentWork: string;
-  /** What kinds of work generate energy rather than just status or obligation. */
-  energizingWork: string;
-  /** Constraints that materially shape strategy: runway, time, geography, job pressure, etc. */
-  constraints: string;
-  /** Public links the builder explicitly wants used as research anchors: GitHub, website, X, LinkedIn, product pages. */
-  links: string[];
+  /** Builder's real name or stable public handle. Prefer what the MCP client already knows. Leave omitted if still unknown. */
+  name?: string;
+  /** One-line current positioning statement. Keep it factual, not aspirational. Leave omitted if unknown. */
+  headline?: string;
+  /** What the builder is optimizing for right now: income, startup wedge, specialization, etc. Leave omitted if unknown. */
+  goalNow?: string;
+  /** Recent projects, shipped work, or repeated patterns the builder actually returns to. Leave omitted if unknown. */
+  recentWork?: string;
+  /** What kinds of work generate energy rather than just status or obligation. Leave omitted if unknown. */
+  energizingWork?: string;
+  /** Constraints that materially shape strategy: runway, time, geography, job pressure, etc. Leave omitted if unknown. */
+  constraints?: string;
+  /** Public links the builder explicitly wants used as research anchors: GitHub, website, X, LinkedIn, product pages. Leave omitted if unknown. */
+  links?: string[];
 }
 
 interface BuilderProfile extends ProfileInput {
@@ -201,6 +201,13 @@ export default class BuilderCompass {
    * ask the user only for missing high-value fields,
    * and pass factual signals rather than flattering summaries.
    *
+   * IMPORTANT:
+   * - Do not ask the user to retype facts the client already knows.
+   * - Pass known fields immediately.
+   * - Omit fields that are still unknown.
+   * - If truly important fields are still missing, elicit only those.
+   * - Calling this method again should refine the saved profile, not start over.
+   *
    * The goal is to capture the smallest truthful self-model that still supports:
    * builder archetype classification,
    * work-fit analysis,
@@ -209,13 +216,13 @@ export default class BuilderCompass {
   async saveProfile(params: ProfileInput): Promise<CompassSnapshot> {
     const now = new Date().toISOString();
     const nextProfile: BuilderProfile = {
-      name: params.name.trim(),
-      headline: params.headline.trim(),
-      goalNow: params.goalNow.trim(),
-      recentWork: params.recentWork.trim(),
-      energizingWork: params.energizingWork.trim(),
-      constraints: params.constraints.trim(),
-      links: (params.links || [])
+      name: (params.name ?? this.profile.name).trim(),
+      headline: (params.headline ?? this.profile.headline).trim(),
+      goalNow: (params.goalNow ?? this.profile.goalNow).trim(),
+      recentWork: (params.recentWork ?? this.profile.recentWork).trim(),
+      energizingWork: (params.energizingWork ?? this.profile.energizingWork).trim(),
+      constraints: (params.constraints ?? this.profile.constraints).trim(),
+      links: (params.links ?? this.profile.links ?? [])
         .map((link) => link.trim())
         .filter(Boolean)
         .slice(0, 6),

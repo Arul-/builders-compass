@@ -47,7 +47,7 @@ Open the Builder Compass dashboard
 
 ### `saveProfile`
 
-Save the builder profile that Builder Compass should reason from. MCP clients should treat this as the canonical capture contract: infer as much as possible from memory and recent conversation, ask the user only for missing high-value fields, and pass factual signals rather than flattering summaries. The goal is to capture the smallest truthful self-model that still supports: builder archetype classification, work-fit analysis, and market-path research.
+Save the builder profile that Builder Compass should reason from. MCP clients should treat this as the canonical capture contract: infer as much as possible from memory and recent conversation, ask the user only for missing high-value fields, and pass factual signals rather than flattering summaries. IMPORTANT: - Do not ask the user to retype facts the client already knows. - Pass known fields immediately. - Omit fields that are still unknown. - If truly important fields are still missing, elicit only those. - Calling this method again should refine the saved profile, not start over. The goal is to capture the smallest truthful self-model that still supports: builder archetype classification, work-fit analysis, and market-path research.
 
 
 

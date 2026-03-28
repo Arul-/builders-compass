@@ -493,6 +493,7 @@
   const state = {
     snapshot: photon.toolOutput || null,
     activeTab: "profile",
+    autoPhase: "idle",
   };
 
   const tabButtons = Array.from(document.querySelectorAll("[data-tab]"));
@@ -555,6 +556,30 @@
     updateTabs();
   }
 
+  async function maybeAutoAdvance() {
+    const locks = getLocks(state.snapshot);
+    if (state.autoPhase !== "idle") return;
+
+    if (locks.profileReady && !locks.identityReady) {
+      state.autoPhase = "identity";
+      try {
+        state.snapshot = await builderCompass.analyzeIdentity();
+      } finally {
+        state.autoPhase = "idle";
+      }
+      return;
+    }
+
+    if (locks.identityReady && !locks.marketReady) {
+      state.autoPhase = "market";
+      try {
+        state.snapshot = await builderCompass.researchMarket();
+      } finally {
+        state.autoPhase = "idle";
+      }
+    }
+  }
+
   tabButtons.forEach((button) => {
     button.addEventListener("click", () => activateTab(button.dataset.tab));
   });
@@ -566,6 +591,9 @@
     if (locks.marketReady) state.activeTab = "market";
     else if (locks.identityReady) state.activeTab = "identity";
     updateTabs();
+    queueMicrotask(() => {
+      maybeAutoAdvance().catch(() => {});
+    });
   });
 
   photon.onThemeChange(() => {
@@ -573,4 +601,7 @@
   });
 
   updateTabs();
+  queueMicrotask(() => {
+    maybeAutoAdvance().catch(() => {});
+  });
 </script>
