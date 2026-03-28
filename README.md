@@ -2,30 +2,63 @@
   <img src="https://www.tinyfish.ai/TF-Logos/Horizontal%20Logo/SVG/TF_Horizontal.svg" alt="TinyFish" width="360" />
 </p>
 
-# Builder Compass
+# builders-compass
 
-Builder Compass is a Photon-native strategy agent for AI-era builders, powered by [TinyFish](https://github.com/tinyfish-io), built with [OpenAI Codex](https://github.com/openai/codex), and delivered through [Photon](https://github.com/portel-dev/photon).
+`builders-compass` is a stateful MCP for one high-stakes builder problem:
 
-It is built for one painful question:
+**you have talent, ideas, and ambition, but you still do not know which path is actually yours.**
 
-**Given who I actually am as a builder, what should I do next to win?**
+Most builders do not fail because they lack tools.
+They fail because they cannot answer, with conviction:
 
-Not in theory.
-Not as motivation.
-Not as vague career advice.
+- what should I build?
+- what should I sell?
+- should I optimize for consulting, product, content, or a startup wedge?
+- what am I actually good at, beyond my self-story?
+- how are people like me making money right now?
 
-But in terms of:
+Builder Compass exists to answer that with more truth than a form, and more market reality than a motivational prompt.
 
-- what to build
-- what to sell
-- how to position yourself
-- which paths are realistic
-- which paths are wasteful
-- what successful people with your profile are doing right now
+It is powered by [TinyFish](https://github.com/tinyfish-io), built with [OpenAI Codex](https://github.com/openai/codex), and delivered through [Photon](https://github.com/portel-dev/photon).
+
+## The Big Idea
+
+Your chatbot already knows a lot about you.
+
+Not in a creepy way. In a practical way.
+
+Through repeated conversations, it sees:
+
+- the projects you keep coming back to
+- the problems that energize you
+- the constraints you keep working around
+- the things you admire versus the things you actually sustain
+- the way you describe your work when you are being honest
+
+That means your MCP client often has a better raw picture of your builder pattern than a resume, a LinkedIn summary, or a one-shot questionnaire.
+
+Builder Compass turns that into the first intelligence layer.
+
+Then it brings in [TinyFish](https://github.com/tinyfish-io) as the second intelligence layer:
+
+- it fills in the live open-web context
+- it researches what builders with the same profile are doing
+- it studies how they position themselves
+- it finds the paths they are using to make money
+- it feeds that evidence back into the final recommendation
+
+So Builder Compass does not stop at:
+
+> "Here is who you are."
+
+It pushes through to:
+
+> "Here is who you are, here is how builders like you are winning, and here is what you should do next."
 
 ## The Pain
 
-Most builders are not lacking ideas.
+Most builders are not lacking intelligence.
+They are lacking orientation.
 
 They are drowning in:
 
@@ -45,11 +78,11 @@ This is the gap Builder Compass is designed to close.
 
 ## The Solution
 
-Builder Compass turns raw user context into an action plan.
+Builder Compass turns builder intel into a plan of action.
 
 It does this in two stages:
 
-### 1. It starts from builder intel the MCP client already has
+### 1. It starts from what the MCP client already knows
 
 Modern chat clients already know a surprising amount about the user:
 
@@ -59,9 +92,18 @@ Modern chat clients already know a surprising amount about the user:
 - what energizes them
 - what constraints they keep mentioning
 
-Instead of forcing the user into a giant form, the MCP client acts as the first intelligence layer. It infers what it can, asks only for missing high-value facts, and passes a compact factual profile into Builder Compass.
+Instead of forcing the user into a giant form, the MCP client acts as the first intelligence layer.
 
-### 2. It uses TinyFish to research what success looks like for that profile
+It:
+
+- infers what it can
+- leaves unknowns blank
+- elicits only the missing high-value facts
+- passes a compact factual builder profile into Builder Compass
+
+That profile is often more accurate than what the user would write from scratch.
+
+### 2. It uses TinyFish to research what winning looks like for that profile
 
 Once Builder Compass has the profile, [TinyFish](https://github.com/tinyfish-io) becomes the market-intelligence engine.
 
@@ -80,6 +122,23 @@ That means the output is not just:
 It becomes:
 
 > “Here is who you are, here is how people like you are winning, and here is what you should do next.”
+
+## Why This Is Attractive
+
+Builder Compass gives builders something most tools do not:
+
+**a bridge between self-knowledge and market reality.**
+
+It does not ask you to pretend to know yourself perfectly.
+It does not give you flattering sludge.
+It does not stop at identity.
+
+It tells you:
+
+- what kind of builder you really are
+- what paths fit your actual wiring
+- what strong builders in your category are doing right now
+- what to do this week if you want momentum, money, or leverage
 
 ## Why This Matters
 
