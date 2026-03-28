@@ -365,7 +365,7 @@ Built on the [Model Context Protocol (MCP)](https://modelcontextprotocol.io/intr
 
 | Photon | Focus | Tools | Features |
 |--------|-------|-------|----------|
-| [**Builder Compass**](builder-compass.md) | Builder Compass | 9 | 🎨🎨 |
+| [**Builder Compass**](builder-compass.md) | Builder Compass | 10 | 🎨🎨 |
 
 
 **Total:** 1 photons ready to use

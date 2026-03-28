@@ -194,6 +194,25 @@ export default class BuilderCompass {
   }
 
   /**
+   * First-step MCP capture for Builder Compass.
+   *
+   * Use this when the client already knows some facts about the builder from
+   * memory or recent conversation.
+   *
+   * The client should:
+   * - infer and pass known facts immediately
+   * - omit fields that are still unknown
+   * - elicit only the missing high-value facts
+   * - use this as the default entry point before identity and market research
+   *
+   * Calling this method saves or refines the stateful builder profile so the UI
+   * and later tools can continue from the same stored profile.
+   */
+  async captureProfile(params: ProfileInput): Promise<CompassSnapshot> {
+    return this.saveProfile(params);
+  }
+
+  /**
    * Save the builder profile that Builder Compass should reason from.
    *
    * MCP clients should treat this as the canonical capture contract:

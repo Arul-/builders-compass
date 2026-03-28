@@ -2,7 +2,7 @@
 
 Builder Compass
 
-> **9 tools** · API Photon · v1.16.0 · MIT
+> **10 tools** · API Photon · v1.16.0 · MIT
 
 **Platform Features:** `custom-ui` `stateful` `dashboard`
 
@@ -21,6 +21,7 @@ Builder Compass
 | Method | Description |
 |--------|-------------|
 | `main` | Open the Builder Compass dashboard |
+| `captureProfile` | First-step MCP capture for Builder Compass. |
 | `saveProfile` | Save the builder profile that Builder Compass should reason from. |
 | `analyzeIdentity` | Analyze the builder's identity, strengths, work fit, and risks |
 | `researchMarket` | Research how people with this profile are making money right now |
@@ -37,6 +38,17 @@ Builder Compass
 ### `main`
 
 Open the Builder Compass dashboard
+
+
+
+
+
+---
+
+
+### `captureProfile`
+
+First-step MCP capture for Builder Compass. Use this when the client already knows some facts about the builder from memory or recent conversation. The client should: - infer and pass known facts immediately - omit fields that are still unknown - elicit only the missing high-value facts - use this as the default entry point before identity and market research. Calling this method saves or refines the stateful builder profile so the UI and later tools can continue from the same stored profile.
 
 
 
@@ -145,22 +157,24 @@ flowchart LR
         PHOTON((🎯))
         T0[🔧 main]
         PHOTON --> T0
-        T1[✏️ saveProfile]
+        T1[🔧 captureProfile]
         PHOTON --> T1
-        T2[🔧 analyzeIdentity]
+        T2[✏️ saveProfile]
         PHOTON --> T2
-        T3[🔧 researchMarket]
+        T3[🔧 analyzeIdentity]
         PHOTON --> T3
-        T4[▶️ runCompass]
+        T4[🔧 researchMarket]
         PHOTON --> T4
-        T5[🔧 strengthMatrix]
+        T5[▶️ runCompass]
         PHOTON --> T5
-        T6[🔧 moneyPaths]
+        T6[🔧 strengthMatrix]
         PHOTON --> T6
-        T7[🔧 fitOverview]
+        T7[🔧 moneyPaths]
         PHOTON --> T7
-        T8[🔧 report]
+        T8[🔧 fitOverview]
         PHOTON --> T8
+        T9[🔧 report]
+        PHOTON --> T9
     end
 ```
 
