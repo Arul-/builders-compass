@@ -15,6 +15,10 @@
 ---
 
 <p align="center">
+  <img src="./screenshot.png" alt="Builder's Compass Dashboard" width="600" />
+</p>
+
+<p align="center">
   <a href="https://www.youtube.com/watch?v=gs6wVcyCaKI">
     <img src="https://img.youtube.com/vi/gs6wVcyCaKI/maxresdefault.jpg" alt="Builder's Compass Demo" width="600" />
   </a>

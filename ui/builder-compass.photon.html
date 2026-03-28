@@ -27,7 +27,7 @@
   }
 
   .wizard {
-    max-width: 640px;
+    max-width: 720px;
     margin: 0 auto;
     display: grid;
     gap: 16px;
@@ -85,9 +85,9 @@
   }
 
   .step.done {
-    background: var(--success-bg);
+    background: color-mix(in srgb, var(--success) 18%, transparent);
     color: var(--success);
-    border-color: color-mix(in srgb, var(--success) 30%, transparent);
+    border-color: color-mix(in srgb, var(--success) 35%, transparent);
   }
 
   .step.locked {
@@ -112,6 +112,7 @@
     border: 1px solid var(--line);
     border-radius: 16px;
     padding: 20px;
+    box-shadow: 0 2px 12px color-mix(in srgb, var(--ink) 6%, transparent);
   }
 
   .card h2 {
@@ -178,22 +179,31 @@
   }
 
   .gauge-bar {
-    height: 6px;
-    border-radius: 3px;
+    height: 8px;
+    border-radius: 4px;
     background: var(--line);
     overflow: hidden;
+    margin-top: 4px;
   }
 
   .gauge-fill {
     height: 100%;
-    border-radius: 3px;
-    transition: width 0.4s;
+    border-radius: 4px;
+    transition: width 0.4s ease-out;
+  }
+
+  .gauge-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
   }
 
   .gauge-value {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 700;
-    margin-top: 4px;
+    min-width: 40px;
+    text-align: right;
   }
 
   /* Tags */
@@ -220,30 +230,44 @@
 
   /* Money paths */
   .path-card {
-    padding: 14px;
-    border-radius: 12px;
+    padding: 16px;
+    border-radius: 14px;
     border: 1px solid var(--line);
     background: var(--canvas);
     margin-bottom: 10px;
   }
 
   .path-card h3 {
-    margin: 0 0 6px;
-    font-size: 14px;
+    margin: 0 0 8px;
+    font-size: 15px;
   }
 
   .path-card .meta {
     display: flex;
-    gap: 12px;
+    gap: 16px;
     font-size: 12px;
     color: var(--muted);
-    margin-bottom: 8px;
+    margin-bottom: 10px;
+    font-weight: 500;
+  }
+
+  .path-card .meta span {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .path-card .meta .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    display: inline-block;
   }
 
   .path-card p {
     margin: 0;
     font-size: 13px;
-    line-height: 1.5;
+    line-height: 1.6;
     color: var(--muted);
   }
 
@@ -341,7 +365,8 @@
 </div>
 
 <script>
-  const state = { snapshot: null, activeStep: "profile" };
+  window.state = { snapshot: null, activeStep: "profile", userNavigated: false };
+  const state = window.state;
 
   const steps = Array.from(document.querySelectorAll("[data-step]"));
   const panels = Array.from(document.querySelectorAll("[data-panel]"));
@@ -445,10 +470,13 @@
       if (id.strengthMatrix?.length) {
         html += `<div class="gauges">`;
         for (const row of id.strengthMatrix) {
+          const color = gaugeColor(row.score);
           html += `<div class="gauge">
-            <div class="gauge-label">${row.category}</div>
-            <div class="gauge-bar"><div class="gauge-fill" style="width:${pct(row.score)}%;background:${gaugeColor(row.score)}"></div></div>
-            <div class="gauge-value" style="color:${gaugeColor(row.score)}">${pct(row.score)}%</div>
+            <div class="gauge-row">
+              <div class="gauge-label">${row.category}</div>
+              <div class="gauge-value" style="color:${color}">${pct(row.score)}%</div>
+            </div>
+            <div class="gauge-bar"><div class="gauge-fill" style="width:${pct(row.score)}%;background:${color}"></div></div>
           </div>`;
         }
         html += `</div>`;
@@ -479,9 +507,9 @@
           html += `<div class="path-card">
             <h3>${path.title}</h3>
             <div class="meta">
-              <span>Fit ${pct(path.fitScore)}%</span>
-              <span>Speed ${pct(path.speedToMoney)}%</span>
-              <span>Demand ${pct(path.marketDemand)}%</span>
+              <span><span class="dot" style="background:${gaugeColor(path.fitScore)}"></span> Fit ${pct(path.fitScore)}%</span>
+              <span><span class="dot" style="background:${gaugeColor(path.speedToMoney)}"></span> Speed ${pct(path.speedToMoney)}%</span>
+              <span><span class="dot" style="background:${gaugeColor(path.marketDemand)}"></span> Demand ${pct(path.marketDemand)}%</span>
             </div>
             <p>${path.whyItFits}</p>
           </div>`;
@@ -507,25 +535,30 @@
     }
   }
 
-  function goToStep(step) {
+  window.goToStep = function goToStep(step) {
     const locks = getLocks(state.snapshot);
     if (step === "identity" && !locks.profile) return;
     if (step === "market" && !locks.identity) return;
     state.activeStep = step;
+    state.userNavigated = true;
     render();
   }
 
   steps.forEach(el => el.addEventListener("click", () => goToStep(el.dataset.step)));
 
-  photon.onResult((result) => {
+  function updateFromResult(result) {
     if (!result) return;
     state.snapshot = result;
-    const locks = getLocks(result);
-    if (locks.market) state.activeStep = "market";
-    else if (locks.identity) state.activeStep = "identity";
-    else if (locks.profile) state.activeStep = "profile";
+    if (!state.userNavigated) {
+      const locks = getLocks(result);
+      if (locks.market) state.activeStep = "market";
+      else if (locks.identity) state.activeStep = "identity";
+      else if (locks.profile) state.activeStep = "profile";
+    }
     render();
-  });
+  }
+
+  photon.onResult(updateFromResult);
 
   photon.onThemeChange(() => {
     document.documentElement.dataset.theme = photon.theme;
@@ -540,12 +573,5 @@
   }
   render();
 
-  photon.callTool("main", {}).then((result) => {
-    if (!result) return;
-    state.snapshot = result;
-    const locks = getLocks(result);
-    if (locks.market) state.activeStep = "market";
-    else if (locks.identity) state.activeStep = "identity";
-    render();
-  }).catch(() => {});
+  photon.callTool("main", {}).then(updateFromResult).catch(() => {});
 </script>
