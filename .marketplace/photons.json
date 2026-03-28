@@ -1,0 +1,40 @@
+{
+  "name": "builders-compass",
+  "version": "1.16.0",
+  "owner": {
+    "name": "Arul-"
+  },
+  "photons": [
+    {
+      "name": "builder-compass",
+      "version": "1.16.0",
+      "description": "Builder Compass",
+      "author": "Unknown",
+      "license": "MIT",
+      "icon": "🧭",
+      "source": "../builder-compass.photon.ts",
+      "hash": "sha256:ba74d6d8aa2710c85f842fa9ef6a33cbd16f7fd5b64fb9f765e72f452091b8a3",
+      "contentHash": "sha256:eb82a367b2ca9e9c176676f34c93a065ae0d5b049e428c2201a99fe7ce5c3459",
+      "tools": [
+        "main",
+        "saveProfile",
+        "analyzeIdentity",
+        "researchMarket",
+        "runCompass",
+        "strengthMatrix",
+        "moneyPaths",
+        "fitOverview",
+        "report"
+      ],
+      "assets": [
+        "ui/builder-compass.html"
+      ],
+      "photonType": "api",
+      "features": [
+        "custom-ui",
+        "stateful",
+        "dashboard"
+      ]
+    }
+  ]
+}

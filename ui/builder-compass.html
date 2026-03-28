@@ -1,0 +1,1199 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Builder Compass</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600;700&family=Sora:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f2eadc;
+        --paper: rgba(255, 251, 244, 0.94);
+        --paper-strong: #fffdf8;
+        --ink: #1f1d1a;
+        --muted: #6d675f;
+        --line: rgba(73, 56, 37, 0.12);
+        --line-strong: rgba(73, 56, 37, 0.2);
+        --olive: #39452f;
+        --sage: #6b8b60;
+        --amber: #b6772e;
+        --rust: #9e593c;
+        --rose: #a14f5f;
+        --mist: #ebe2d3;
+        --shadow: 0 24px 80px rgba(49, 35, 15, 0.12);
+        --radius-xl: 30px;
+        --radius-lg: 22px;
+        --radius-md: 16px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        color: var(--ink);
+        font-family: 'Instrument Sans', sans-serif;
+        background:
+          radial-gradient(circle at top left, rgba(107, 139, 96, 0.16), transparent 26%),
+          radial-gradient(circle at top right, rgba(182, 119, 46, 0.14), transparent 22%),
+          linear-gradient(180deg, #f8f2e7 0%, var(--bg) 46%, #eadfcc 100%);
+      }
+
+      body::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background:
+          linear-gradient(rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.02)),
+          linear-gradient(90deg, rgba(61, 43, 18, 0.02) 1px, transparent 1px),
+          linear-gradient(rgba(61, 43, 18, 0.02) 1px, transparent 1px);
+        background-size:
+          100% 100%,
+          42px 42px,
+          42px 42px;
+        mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.88), rgba(0, 0, 0, 0.18));
+      }
+
+      h1,
+      h2,
+      h3,
+      h4,
+      .display {
+        font-family: 'Sora', sans-serif;
+        margin: 0;
+      }
+
+      p {
+        margin: 0;
+      }
+
+      button,
+      input,
+      textarea {
+        font: inherit;
+      }
+
+      .shell {
+        position: relative;
+        padding: 28px;
+        display: grid;
+        gap: 18px;
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: minmax(0, 1.4fr) minmax(320px, 0.8fr);
+        gap: 18px;
+      }
+
+      .panel {
+        position: relative;
+        overflow: hidden;
+        border-radius: var(--radius-xl);
+        border: 1px solid var(--line);
+        background: linear-gradient(180deg, rgba(255, 252, 247, 0.94), rgba(249, 242, 231, 0.96));
+        box-shadow: var(--shadow);
+      }
+
+      .panel::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: linear-gradient(
+          150deg,
+          rgba(107, 139, 96, 0.08),
+          transparent 42%,
+          rgba(182, 119, 46, 0.08)
+        );
+      }
+
+      .hero-main {
+        padding: 28px 30px 26px;
+      }
+
+      .hero-side {
+        padding: 24px;
+        display: grid;
+        gap: 14px;
+        align-content: start;
+      }
+
+      .eyebrow,
+      .badge,
+      .signal {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border-radius: 999px;
+        font:
+          500 12px/1 'IBM Plex Mono',
+          monospace;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      .eyebrow {
+        padding: 7px 12px;
+        background: rgba(57, 69, 47, 0.08);
+        border: 1px solid rgba(57, 69, 47, 0.12);
+        color: var(--olive);
+      }
+
+      .hero-main h1 {
+        margin-top: 16px;
+        font-size: clamp(2.1rem, 5vw, 4rem);
+        line-height: 0.96;
+        max-width: 12ch;
+      }
+
+      .lede {
+        margin-top: 16px;
+        max-width: 64ch;
+        color: var(--muted);
+        font-size: 1rem;
+        line-height: 1.65;
+      }
+
+      .metric-row {
+        margin-top: 24px;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .metric {
+        padding: 16px;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.55);
+        border: 1px solid rgba(73, 56, 37, 0.1);
+      }
+
+      .metric-label {
+        color: var(--muted);
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .metric-value {
+        margin-top: 8px;
+        font:
+          700 2rem/1 'Sora',
+          sans-serif;
+      }
+
+      .status-block {
+        padding: 16px 18px;
+        border-radius: 22px;
+        background: rgba(255, 255, 255, 0.56);
+        border: 1px solid rgba(73, 56, 37, 0.1);
+      }
+
+      .status-block strong {
+        display: block;
+        margin-bottom: 8px;
+      }
+
+      .status-copy {
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.55;
+      }
+
+      .signal {
+        padding: 8px 12px;
+        border: 1px solid rgba(57, 69, 47, 0.12);
+        background: rgba(107, 139, 96, 0.08);
+        color: var(--olive);
+      }
+
+      .signal.warn {
+        border-color: rgba(158, 89, 60, 0.18);
+        background: rgba(158, 89, 60, 0.08);
+        color: var(--rust);
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: minmax(320px, 0.95fr) minmax(420px, 1.25fr) minmax(320px, 0.88fr);
+        gap: 18px;
+        align-items: start;
+      }
+
+      .column {
+        display: grid;
+        gap: 18px;
+      }
+
+      .section {
+        padding: 22px;
+      }
+
+      .section-head {
+        display: flex;
+        align-items: start;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+
+      .section-head p {
+        margin-top: 8px;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.55;
+      }
+
+      .badge {
+        padding: 6px 10px;
+        background: rgba(182, 119, 46, 0.1);
+        border: 1px solid rgba(182, 119, 46, 0.14);
+        color: var(--amber);
+      }
+
+      .stack {
+        display: grid;
+        gap: 12px;
+      }
+
+      .split {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+
+      label {
+        display: grid;
+        gap: 7px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      input,
+      textarea {
+        width: 100%;
+        border: 1px solid rgba(73, 56, 37, 0.14);
+        border-radius: var(--radius-md);
+        background: rgba(255, 255, 255, 0.64);
+        padding: 12px 14px;
+        color: var(--ink);
+        outline: none;
+      }
+
+      input:focus,
+      textarea:focus {
+        border-color: rgba(57, 69, 47, 0.34);
+        box-shadow: 0 0 0 4px rgba(107, 139, 96, 0.1);
+      }
+
+      textarea {
+        min-height: 94px;
+        resize: vertical;
+      }
+
+      .toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      button {
+        border: 0;
+        border-radius: 16px;
+        padding: 12px 16px;
+        cursor: pointer;
+        transition:
+          transform 140ms ease,
+          box-shadow 140ms ease,
+          opacity 140ms ease;
+      }
+
+      button:hover {
+        transform: translateY(-1px);
+      }
+
+      button:disabled {
+        opacity: 0.56;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .primary {
+        background: linear-gradient(135deg, #39452f, #546848);
+        color: #f7f3ec;
+        box-shadow: 0 14px 28px rgba(57, 69, 47, 0.18);
+      }
+
+      .secondary {
+        background: rgba(255, 255, 255, 0.6);
+        border: 1px solid rgba(73, 56, 37, 0.12);
+        color: var(--ink);
+      }
+
+      .ghost {
+        background: transparent;
+        border: 1px dashed rgba(73, 56, 37, 0.16);
+        color: var(--muted);
+      }
+
+      .tag-list,
+      .path-list,
+      .source-list,
+      .move-list,
+      .risk-list,
+      .matrix-list {
+        display: grid;
+        gap: 12px;
+      }
+
+      .tag-cloud {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 12px;
+        border-radius: 999px;
+        background: rgba(57, 69, 47, 0.08);
+        border: 1px solid rgba(57, 69, 47, 0.12);
+        color: var(--olive);
+        font-size: 13px;
+      }
+
+      .tag.alt {
+        background: rgba(182, 119, 46, 0.09);
+        border-color: rgba(182, 119, 46, 0.14);
+        color: #8b5a1b;
+      }
+
+      .tag.warn {
+        background: rgba(158, 89, 60, 0.08);
+        border-color: rgba(158, 89, 60, 0.14);
+        color: var(--rust);
+      }
+
+      .summary-card,
+      .path-card,
+      .source-card,
+      .matrix-card,
+      .move-card {
+        padding: 16px;
+        border-radius: var(--radius-lg);
+        background: rgba(255, 255, 255, 0.58);
+        border: 1px solid rgba(73, 56, 37, 0.1);
+      }
+
+      .summary-card p,
+      .path-copy,
+      .source-copy,
+      .supporting {
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.58;
+      }
+
+      .path-top,
+      .source-top,
+      .matrix-top {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        align-items: start;
+      }
+
+      .path-title,
+      .source-title,
+      .matrix-title {
+        font-family: 'Sora', sans-serif;
+        font-size: 1.05rem;
+      }
+
+      .path-category {
+        flex-shrink: 0;
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: rgba(57, 69, 47, 0.08);
+        border: 1px solid rgba(57, 69, 47, 0.12);
+        color: var(--olive);
+        font:
+          500 12px/1 'IBM Plex Mono',
+          monospace;
+        text-transform: uppercase;
+      }
+
+      .scores {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+        margin-top: 14px;
+      }
+
+      .score-box {
+        padding: 12px;
+        border-radius: 16px;
+        background: rgba(249, 242, 231, 0.9);
+        border: 1px solid rgba(73, 56, 37, 0.08);
+      }
+
+      .score-label {
+        color: var(--muted);
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .score-value {
+        margin-top: 8px;
+        font:
+          700 1.25rem/1 'Sora',
+          sans-serif;
+      }
+
+      .meter-list {
+        display: grid;
+        gap: 12px;
+      }
+
+      .meter {
+        padding: 14px;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.58);
+        border: 1px solid rgba(73, 56, 37, 0.1);
+      }
+
+      .meter-head {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        align-items: center;
+      }
+
+      .meter-head strong {
+        font-size: 14px;
+      }
+
+      .meter-head span {
+        color: var(--muted);
+        font:
+          500 12px/1 'IBM Plex Mono',
+          monospace;
+      }
+
+      .meter-track {
+        margin-top: 12px;
+        height: 10px;
+        border-radius: 999px;
+        background: rgba(57, 69, 47, 0.08);
+        overflow: hidden;
+      }
+
+      .meter-fill {
+        height: 100%;
+        border-radius: 999px;
+        background: linear-gradient(90deg, #6b8b60, #39452f);
+      }
+
+      .meter-fill.warn {
+        background: linear-gradient(90deg, #b6772e, #9e593c);
+      }
+
+      .mono {
+        font-family: 'IBM Plex Mono', monospace;
+      }
+
+      .empty {
+        padding: 16px;
+        border-radius: 18px;
+        border: 1px dashed rgba(73, 56, 37, 0.18);
+        color: var(--muted);
+        background: rgba(255, 255, 255, 0.38);
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+      @media (max-width: 1200px) {
+        .hero,
+        .grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <section class="hero">
+        <div class="panel hero-main">
+          <div class="eyebrow">Builder Compass / Strategy Agent</div>
+          <h1>Find the money paths that actually fit your builder profile.</h1>
+          <p class="lede">
+            Builder Compass turns a small amount of self-input plus TinyFish research into a
+            practical operating guide. It classifies what kind of AI-native builder you are,
+            researches how similar profiles make money on the internet, and maps out the fastest and
+            strongest next moves.
+          </p>
+          <div class="metric-row">
+            <div class="metric">
+              <div class="metric-label">Archetype confidence</div>
+              <div class="metric-value" id="metric-confidence">0%</div>
+            </div>
+            <div class="metric">
+              <div class="metric-label">Top path fit</div>
+              <div class="metric-value" id="metric-fit">0%</div>
+            </div>
+            <div class="metric">
+              <div class="metric-label">Speed to money</div>
+              <div class="metric-value" id="metric-speed">0%</div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="panel hero-side">
+          <div class="status-block">
+            <strong id="hero-name">Builder Compass</strong>
+            <p class="status-copy" id="hero-subtitle">
+              A Photon-native guide for AI-era builders trying to turn their strengths into income
+              and leverage.
+            </p>
+          </div>
+          <div class="status-block">
+            <div class="signal" id="tinyfish-status">TinyFish key: not configured</div>
+            <p class="status-copy" id="tinyfish-copy" style="margin-top: 10px">
+              Heuristic mode still works, but TinyFish is what turns this into deep market research
+              instead of a clever questionnaire.
+            </p>
+          </div>
+          <div class="status-block">
+            <strong>Best demo story</strong>
+            <p class="status-copy">
+              Give it a builder profile, let TinyFish classify the pattern, then show how people
+              with that profile are really making money online right now.
+            </p>
+          </div>
+        </aside>
+      </section>
+
+      <section class="grid">
+        <div class="column">
+          <div class="panel section">
+            <div class="section-head">
+              <div>
+                <h2>Profile intake</h2>
+                <p>
+                  Ask for only what matters. The rest comes from inference and open-web research.
+                </p>
+              </div>
+              <div class="badge" id="profile-state">Awaiting profile</div>
+            </div>
+
+            <div class="stack">
+              <label>
+                Name
+                <input id="name" placeholder="Arul" />
+              </label>
+              <label>
+                One-line headline
+                <input
+                  id="headline"
+                  placeholder="AI-native builder exploring devtools and agent workflows"
+                />
+              </label>
+              <label>
+                What are you optimizing for right now?
+                <textarea
+                  id="goalNow"
+                  placeholder="Make money in the next 3 months while building toward a product wedge."
+                ></textarea>
+              </label>
+              <label>
+                What have you built or worked on recently?
+                <textarea
+                  id="recentWork"
+                  placeholder="Photon, MCP tools, hackathon prototypes, workflow automation, docs, demos."
+                ></textarea>
+              </label>
+              <label>
+                What kind of work gives you energy?
+                <textarea
+                  id="energizingWork"
+                  placeholder="Turning ambiguity into a product concept, prototyping fast, shaping strategy, making useful tools."
+                ></textarea>
+              </label>
+              <label>
+                Constraints
+                <textarea
+                  id="constraints"
+                  placeholder="Income pressure, solo execution, limited time, want something monetizable and compounding."
+                ></textarea>
+              </label>
+              <label>
+                Public links
+                <textarea
+                  id="links"
+                  placeholder="One per line: GitHub, personal site, X, LinkedIn, product pages"
+                ></textarea>
+              </label>
+              <label>
+                TinyFish API key
+                <input
+                  id="tinyfishApiKey"
+                  type="password"
+                  placeholder="Bring your own key to unlock live research"
+                />
+              </label>
+            </div>
+
+            <div class="toolbar" style="margin-top: 16px">
+              <button class="primary" id="saveProfile">Save profile</button>
+              <button class="secondary" id="analyzeIdentity">Analyze profile</button>
+              <button class="secondary" id="researchMarket">Research market</button>
+              <button class="ghost" id="runCompass">Run full compass</button>
+            </div>
+          </div>
+
+          <div class="panel section">
+            <div class="section-head">
+              <div>
+                <h2>Archetype and tags</h2>
+                <p>The identity model has to be machine-actionable, not just flattering prose.</p>
+              </div>
+            </div>
+
+            <div class="summary-card">
+              <h3 id="archetype-title">Awaiting profile</h3>
+              <p id="identity-summary" style="margin-top: 12px">
+                Save your profile to classify your builder archetype and strongest repeatable
+                patterns.
+              </p>
+            </div>
+
+            <div class="stack" style="margin-top: 14px">
+              <div>
+                <div class="supporting" style="margin-bottom: 8px">Archetype tags</div>
+                <div class="tag-cloud" id="archetype-tags"></div>
+              </div>
+              <div>
+                <div class="supporting" style="margin-bottom: 8px">Strength tags</div>
+                <div class="tag-cloud" id="strength-tags"></div>
+              </div>
+              <div>
+                <div class="supporting" style="margin-bottom: 8px">Risk tags</div>
+                <div class="tag-cloud" id="risk-tags"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel section">
+            <div class="section-head">
+              <div>
+                <h2>Evidence and research anchors</h2>
+                <p>Builder Compass should show where its judgments came from.</p>
+              </div>
+            </div>
+            <div class="source-list" id="source-list"></div>
+          </div>
+        </div>
+
+        <div class="column">
+          <div class="panel section">
+            <div class="section-head">
+              <div>
+                <h2>Strength matrix</h2>
+                <p>
+                  The useful output is not “you are special.” It is where you compound, where you
+                  stall, and what to train.
+                </p>
+              </div>
+              <div class="badge mono" id="identity-status">Idle</div>
+            </div>
+            <div class="matrix-list" id="matrix-list"></div>
+          </div>
+
+          <div class="panel section">
+            <div class="section-head">
+              <div>
+                <h2>Fit overview</h2>
+                <p>
+                  These are the dials that should guide the recommendation, not just your
+                  aspirations.
+                </p>
+              </div>
+            </div>
+            <div class="meter-list" id="meter-list"></div>
+          </div>
+
+          <div class="panel section">
+            <div class="section-head">
+              <div>
+                <h2>Market reading</h2>
+                <p>
+                  We research how similar profiles are turning skill, taste, and context into
+                  income.
+                </p>
+              </div>
+              <div class="badge mono" id="market-status">Idle</div>
+            </div>
+            <div class="summary-card">
+              <h3>Research summary</h3>
+              <p id="market-summary" style="margin-top: 12px">
+                Run the market pass to see the strongest near-term and compounding paths.
+              </p>
+            </div>
+            <div class="move-list" id="next-moves" style="margin-top: 14px"></div>
+          </div>
+        </div>
+
+        <div class="column">
+          <div class="panel section">
+            <div class="section-head">
+              <div>
+                <h2>Money paths</h2>
+                <p>Best-fit routes are ranked by fit, speed, demand, and sustainability.</p>
+              </div>
+            </div>
+            <div class="path-list" id="path-list"></div>
+          </div>
+
+          <div class="panel section">
+            <div class="section-head">
+              <div>
+                <h2>Things to avoid</h2>
+                <p>Bad strategy usually sounds plausible before it starts costing time.</p>
+              </div>
+            </div>
+            <div class="risk-list" id="avoid-list"></div>
+          </div>
+
+          <div class="panel section">
+            <div class="section-head">
+              <div>
+                <h2>Builder report</h2>
+                <p>A narrative export you can use in ChatGPT, Claude, or your own notes.</p>
+              </div>
+            </div>
+            <div class="summary-card">
+              <pre
+                id="report"
+                style="
+                  margin: 0;
+                  white-space: pre-wrap;
+                  color: var(--muted);
+                  font:
+                    13px/1.65 'IBM Plex Mono',
+                    monospace;
+                "
+              ></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <script>
+      const state = {
+        snapshot: photon.toolOutput || null,
+      };
+
+      const els = {
+        heroName: document.getElementById('hero-name'),
+        heroSubtitle: document.getElementById('hero-subtitle'),
+        tinyfishStatus: document.getElementById('tinyfish-status'),
+        tinyfishCopy: document.getElementById('tinyfish-copy'),
+        metricConfidence: document.getElementById('metric-confidence'),
+        metricFit: document.getElementById('metric-fit'),
+        metricSpeed: document.getElementById('metric-speed'),
+        profileState: document.getElementById('profile-state'),
+        identityStatus: document.getElementById('identity-status'),
+        marketStatus: document.getElementById('market-status'),
+        name: document.getElementById('name'),
+        headline: document.getElementById('headline'),
+        goalNow: document.getElementById('goalNow'),
+        recentWork: document.getElementById('recentWork'),
+        energizingWork: document.getElementById('energizingWork'),
+        constraints: document.getElementById('constraints'),
+        links: document.getElementById('links'),
+        tinyfishApiKey: document.getElementById('tinyfishApiKey'),
+        saveProfile: document.getElementById('saveProfile'),
+        analyzeIdentity: document.getElementById('analyzeIdentity'),
+        researchMarket: document.getElementById('researchMarket'),
+        runCompass: document.getElementById('runCompass'),
+        archetypeTitle: document.getElementById('archetype-title'),
+        identitySummary: document.getElementById('identity-summary'),
+        archetypeTags: document.getElementById('archetype-tags'),
+        strengthTags: document.getElementById('strength-tags'),
+        riskTags: document.getElementById('risk-tags'),
+        sourceList: document.getElementById('source-list'),
+        matrixList: document.getElementById('matrix-list'),
+        meterList: document.getElementById('meter-list'),
+        marketSummary: document.getElementById('market-summary'),
+        nextMoves: document.getElementById('next-moves'),
+        pathList: document.getElementById('path-list'),
+        avoidList: document.getElementById('avoid-list'),
+        report: document.getElementById('report'),
+      };
+
+      function linksArray() {
+        return els.links.value
+          .split('\n')
+          .map((link) => link.trim())
+          .filter(Boolean);
+      }
+
+      function percent(value) {
+        return `${Math.round((Number(value) || 0) * 100)}%`;
+      }
+
+      function labelize(value) {
+        return String(value || '')
+          .replace(/-/g, ' ')
+          .replace(/\b\w/g, (char) => char.toUpperCase());
+      }
+
+      function renderTagCloud(node, values, className = '') {
+        node.innerHTML = '';
+        if (!values || values.length === 0) {
+          node.innerHTML = '<div class="empty">Nothing classified yet.</div>';
+          return;
+        }
+
+        values.forEach((value) => {
+          const tag = document.createElement('span');
+          tag.className = `tag ${className}`.trim();
+          tag.textContent = labelize(value);
+          node.appendChild(tag);
+        });
+      }
+
+      function renderSources(snapshot) {
+        const identityEvidence = snapshot.identity?.evidence || [];
+        const marketEvidence = snapshot.market?.evidence || [];
+        const merged = [...identityEvidence, ...marketEvidence];
+        els.sourceList.innerHTML = '';
+
+        if (merged.length === 0) {
+          els.sourceList.innerHTML =
+            '<div class="empty">Add links or run analysis to collect visible evidence and anchors.</div>';
+          return;
+        }
+
+        merged.forEach((item) => {
+          const card = document.createElement('article');
+          card.className = 'source-card';
+          const href = item.url || '#';
+          card.innerHTML = `
+            <div class="source-top">
+              <div class="source-title">${item.label || 'Source'}</div>
+              <div class="badge mono">Anchor</div>
+            </div>
+            <p class="source-copy" style="margin-top: 12px">${item.reason || ''}</p>
+            <p class="source-copy" style="margin-top: 12px"><a href="${href}" target="_blank" rel="noreferrer">${href}</a></p>
+          `;
+          els.sourceList.appendChild(card);
+        });
+      }
+
+      function renderMatrix(snapshot) {
+        const rows = snapshot.identity?.strengthMatrix || [];
+        els.matrixList.innerHTML = '';
+
+        if (rows.length === 0) {
+          els.matrixList.innerHTML =
+            '<div class="empty">Run identity analysis to build the strength matrix.</div>';
+          return;
+        }
+
+        rows.forEach((row) => {
+          const card = document.createElement('article');
+          card.className = 'matrix-card';
+          card.innerHTML = `
+            <div class="matrix-top">
+              <div class="matrix-title">${row.category}</div>
+              <div class="badge mono">${percent(row.score)}</div>
+            </div>
+            <p class="supporting" style="margin-top: 12px">${row.rationale}</p>
+            <div class="scores">
+              <div class="score-box">
+                <div class="score-label">Confidence</div>
+                <div class="score-value">${percent(row.confidence)}</div>
+              </div>
+              <div class="score-box">
+                <div class="score-label">Energy Fit</div>
+                <div class="score-value">${percent(row.energyFit)}</div>
+              </div>
+              <div class="score-box">
+                <div class="score-label">Strategic Relevance</div>
+                <div class="score-value">${percent(row.strategicRelevance)}</div>
+              </div>
+              <div class="score-box">
+                <div class="score-label">Risk Load</div>
+                <div class="score-value">${percent(row.riskLoad)}</div>
+              </div>
+            </div>
+            <div class="supporting mono" style="margin-top: 12px">Basis: ${labelize(row.basis)}</div>
+          `;
+          els.matrixList.appendChild(card);
+        });
+      }
+
+      function renderMeters(meters) {
+        els.meterList.innerHTML = '';
+
+        if (!meters || meters.length === 0) {
+          els.meterList.innerHTML =
+            '<div class="empty">Run analysis to populate the fit dials.</div>';
+          return;
+        }
+
+        meters.forEach((meter) => {
+          const card = document.createElement('article');
+          card.className = 'meter';
+          const warn = String(meter.label || '')
+            .toLowerCase()
+            .includes('risk');
+          card.innerHTML = `
+            <div class="meter-head">
+              <strong>${meter.label}</strong>
+              <span>${percent(meter.value)}</span>
+            </div>
+            <div class="meter-track">
+              <div class="meter-fill ${warn ? 'warn' : ''}" style="width: ${Math.round((meter.value || 0) * 100)}%"></div>
+            </div>
+            <p class="supporting" style="margin-top: 10px">${meter.note || ''}</p>
+          `;
+          els.meterList.appendChild(card);
+        });
+      }
+
+      function renderPaths(snapshot) {
+        const paths = snapshot.market?.topPaths || [];
+        els.pathList.innerHTML = '';
+
+        if (paths.length === 0) {
+          els.pathList.innerHTML =
+            '<div class="empty">Run the market pass to rank the strongest money paths.</div>';
+          return;
+        }
+
+        paths.forEach((path) => {
+          const card = document.createElement('article');
+          card.className = 'path-card';
+          card.innerHTML = `
+            <div class="path-top">
+              <div class="path-title">${path.title}</div>
+              <div class="path-category">${labelize(path.category)}</div>
+            </div>
+            <p class="path-copy" style="margin-top: 12px">${path.whyItFits}</p>
+            <div class="scores">
+              <div class="score-box">
+                <div class="score-label">Fit</div>
+                <div class="score-value">${percent(path.fitScore)}</div>
+              </div>
+              <div class="score-box">
+                <div class="score-label">Speed to Money</div>
+                <div class="score-value">${percent(path.speedToMoney)}</div>
+              </div>
+              <div class="score-box">
+                <div class="score-label">Market Demand</div>
+                <div class="score-value">${percent(path.marketDemand)}</div>
+              </div>
+              <div class="score-box">
+                <div class="score-label">Sustainability</div>
+                <div class="score-value">${percent(path.sustainability)}</div>
+              </div>
+            </div>
+            <div class="supporting" style="margin-top: 12px"><strong>Channels:</strong> ${(path.channels || []).join(', ') || 'None yet'}</div>
+            <div class="supporting" style="margin-top: 10px"><strong>First steps:</strong> ${(path.firstSteps || []).join(' · ') || 'None yet'}</div>
+            <div class="supporting" style="margin-top: 10px"><strong>Examples:</strong> ${(path.examples || []).join(', ') || 'None yet'}</div>
+          `;
+          els.pathList.appendChild(card);
+        });
+      }
+
+      function renderNextMoves(snapshot) {
+        const moves = snapshot.market?.nextMoves || [];
+        els.nextMoves.innerHTML = '';
+
+        if (moves.length === 0) {
+          els.nextMoves.innerHTML = '<div class="empty">No action plan yet.</div>';
+          return;
+        }
+
+        moves.forEach((move, index) => {
+          const card = document.createElement('article');
+          card.className = 'move-card';
+          card.innerHTML = `
+            <div class="matrix-top">
+              <div class="matrix-title">Move ${index + 1}</div>
+              <div class="badge mono">Action</div>
+            </div>
+            <p class="supporting" style="margin-top: 12px">${move}</p>
+          `;
+          els.nextMoves.appendChild(card);
+        });
+      }
+
+      function renderAvoids(snapshot) {
+        const items = snapshot.market?.avoidPaths || [];
+        els.avoidList.innerHTML = '';
+
+        if (items.length === 0) {
+          els.avoidList.innerHTML = '<div class="empty">No anti-patterns captured yet.</div>';
+          return;
+        }
+
+        items.forEach((item) => {
+          const card = document.createElement('article');
+          card.className = 'move-card';
+          card.innerHTML = `<div class="tag warn">Avoid</div><p class="supporting" style="margin-top: 12px">${item}</p>`;
+          els.avoidList.appendChild(card);
+        });
+      }
+
+      async function renderReport() {
+        try {
+          els.report.textContent = await builderCompass.report();
+        } catch {
+          els.report.textContent = 'Run the compass flow to generate the narrative report.';
+        }
+      }
+
+      async function renderMetersFromTool() {
+        try {
+          const meters = await builderCompass.fitOverview();
+          renderMeters(meters);
+        } catch {
+          renderMeters([]);
+        }
+      }
+
+      function hydrateForm(snapshot) {
+        const profile = snapshot.profile || {};
+        els.name.value = profile.name || '';
+        els.headline.value = profile.headline || '';
+        els.goalNow.value = profile.goalNow || '';
+        els.recentWork.value = profile.recentWork || '';
+        els.energizingWork.value = profile.energizingWork || '';
+        els.constraints.value = profile.constraints || '';
+        els.links.value = (profile.links || []).join('\n');
+      }
+
+      async function render() {
+        const snapshot = state.snapshot || {};
+        const profile = snapshot.profile || {};
+        const identity = snapshot.identity || {};
+        const market = snapshot.market || {};
+        const topPath = market.topPaths?.[0] || {};
+
+        els.heroName.textContent = profile.name ? `${profile.name}'s Compass` : 'Builder Compass';
+        els.heroSubtitle.textContent = profile.headline
+          ? profile.headline
+          : 'A Photon-native guide for AI-era builders trying to turn their strengths into income and leverage.';
+        els.profileState.textContent = snapshot.readyState?.hasProfile
+          ? 'Profile captured'
+          : 'Awaiting profile';
+        els.identityStatus.textContent = labelize(identity.status || 'idle');
+        els.marketStatus.textContent = labelize(market.status || 'idle');
+        els.archetypeTitle.textContent = identity.title || 'Awaiting profile';
+        els.identitySummary.textContent =
+          identity.identitySummary ||
+          'Save your profile to classify your builder archetype and strongest repeatable patterns.';
+        els.marketSummary.textContent =
+          market.researchSummary ||
+          'Run the market pass to see the strongest near-term and compounding paths.';
+
+        els.metricConfidence.textContent = percent(identity.confidence || 0);
+        els.metricFit.textContent = percent(topPath.fitScore || 0);
+        els.metricSpeed.textContent = percent(topPath.speedToMoney || 0);
+
+        const tinyfishReady = Boolean(snapshot.apiKeyConfigured);
+        els.tinyfishStatus.textContent = tinyfishReady
+          ? 'TinyFish key: configured'
+          : 'TinyFish key: not configured';
+        els.tinyfishStatus.className = `signal ${tinyfishReady ? '' : 'warn'}`.trim();
+        els.tinyfishCopy.textContent = tinyfishReady
+          ? 'TinyFish can now research your profile and current internet-visible money paths.'
+          : 'Heuristic mode works without a key. Add your TinyFish key to upgrade this into a real research engine.';
+
+        renderTagCloud(els.archetypeTags, identity.archetypeTags, '');
+        renderTagCloud(els.strengthTags, identity.strengthTags, 'alt');
+        renderTagCloud(els.riskTags, identity.riskTags, 'warn');
+        renderSources(snapshot);
+        renderMatrix(snapshot);
+        renderPaths(snapshot);
+        renderNextMoves(snapshot);
+        renderAvoids(snapshot);
+        await renderMetersFromTool();
+        await renderReport();
+      }
+
+      async function refreshMain() {
+        state.snapshot = await builderCompass.main();
+        hydrateForm(state.snapshot);
+        await render();
+      }
+
+      async function saveProfile() {
+        state.snapshot = await builderCompass.saveProfile({
+          name: els.name.value,
+          headline: els.headline.value,
+          goalNow: els.goalNow.value,
+          recentWork: els.recentWork.value,
+          energizingWork: els.energizingWork.value,
+          constraints: els.constraints.value,
+          links: linksArray(),
+          tinyfishApiKey: els.tinyfishApiKey.value,
+        });
+        await render();
+      }
+
+      els.saveProfile.addEventListener('click', saveProfile);
+
+      els.analyzeIdentity.addEventListener('click', async () => {
+        await saveProfile();
+        state.snapshot.identity = await builderCompass.analyzeIdentity();
+        await refreshMain();
+      });
+
+      els.researchMarket.addEventListener('click', async () => {
+        await saveProfile();
+        state.snapshot.market = await builderCompass.researchMarket();
+        await refreshMain();
+      });
+
+      els.runCompass.addEventListener('click', async () => {
+        await saveProfile();
+        state.snapshot = await builderCompass.runCompass();
+        await refreshMain();
+      });
+
+      photon.onResult(async (result) => {
+        if (result?.productName === 'Builder Compass' || result?.profile || result?.identity) {
+          state.snapshot = result;
+          hydrateForm(result);
+          await render();
+        }
+      });
+
+      photon.onThemeChange(() => {
+        document.body.dataset.theme = photon.theme;
+      });
+
+      hydrateForm(state.snapshot || {});
+      render();
+    </script>
+  </body>
+</html>

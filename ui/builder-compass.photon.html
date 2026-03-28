@@ -1,0 +1,380 @@
+<style>
+  :root {
+    --canvas: #f4eddf;
+    --ink: #201d18;
+    --muted: #6c665d;
+    --olive: #38452f;
+    --sage: #6f8d62;
+    --amber: #ba7c33;
+    --rust: #9d5a42;
+    --card: rgba(255, 251, 244, 0.92);
+    --line: rgba(68, 53, 36, 0.12);
+    --shadow: 0 18px 48px rgba(54, 38, 17, 0.1);
+    --radius-xl: 28px;
+    --radius-lg: 20px;
+    --radius-md: 16px;
+  }
+
+  body {
+    background:
+      radial-gradient(circle at top left, rgba(111, 141, 98, 0.14), transparent 24%),
+      radial-gradient(circle at top right, rgba(186, 124, 51, 0.12), transparent 20%),
+      linear-gradient(180deg, #f8f1e7 0%, var(--canvas) 44%, #ecdfcb 100%);
+    color: var(--ink);
+    font-family: 'Inter', system-ui, sans-serif;
+    padding: 24px;
+  }
+
+  .shell {
+    display: grid;
+    gap: 18px;
+  }
+
+  .hero,
+  .grid {
+    display: grid;
+    gap: 18px;
+  }
+
+  .hero {
+    grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.82fr);
+  }
+
+  .grid {
+    grid-template-columns: minmax(320px, 0.9fr) minmax(400px, 1.1fr) minmax(320px, 0.92fr);
+    align-items: start;
+  }
+
+  .column {
+    display: grid;
+    gap: 18px;
+  }
+
+  .panel {
+    background: linear-gradient(180deg, rgba(255, 252, 247, 0.94), rgba(249, 241, 229, 0.96));
+    border: 1px solid var(--line);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow);
+    padding: 22px;
+  }
+
+  .hero-main {
+    padding: 28px;
+  }
+
+  .eyebrow,
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border-radius: 999px;
+    font:
+      500 12px/1 ui-monospace,
+      SFMono-Regular,
+      Menlo,
+      monospace;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .eyebrow {
+    color: var(--olive);
+    padding: 7px 12px;
+    border: 1px solid rgba(56, 69, 47, 0.14);
+    background: rgba(56, 69, 47, 0.08);
+  }
+
+  .hero-main h1 {
+    margin-top: 14px;
+    font-size: clamp(2.1rem, 5vw, 4rem);
+    line-height: 0.96;
+    font-weight: 800;
+    max-width: 11ch;
+  }
+
+  .lede,
+  .copy {
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .lede {
+    margin-top: 16px;
+    max-width: 64ch;
+    font-size: 1rem;
+  }
+
+  .metrics {
+    margin-top: 24px;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .metric {
+    background: rgba(255, 255, 255, 0.58);
+    border: 1px solid rgba(68, 53, 36, 0.1);
+    border-radius: 18px;
+    padding: 16px;
+  }
+
+  .metric label {
+    display: block;
+    color: var(--muted);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 8px;
+  }
+
+  .metric [data-method] {
+    min-height: 0;
+  }
+
+  .stack {
+    display: grid;
+    gap: 12px;
+  }
+
+  .toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .toolbar button,
+  button[data-method] {
+    border-radius: 16px;
+    padding: 12px 16px;
+    font-weight: 600;
+  }
+
+  .primary {
+    background: linear-gradient(135deg, #38452f, #526647);
+    color: #f7f3ec;
+  }
+
+  .secondary {
+    background: rgba(255, 255, 255, 0.62);
+    color: var(--ink);
+    border: 1px solid rgba(68, 53, 36, 0.12);
+  }
+
+  .callout {
+    padding: 16px;
+    border-radius: 18px;
+    background: rgba(111, 141, 98, 0.08);
+    border: 1px solid rgba(111, 141, 98, 0.14);
+    color: var(--muted);
+  }
+
+  .warn {
+    background: rgba(157, 90, 66, 0.08);
+    border-color: rgba(157, 90, 66, 0.14);
+  }
+
+  .section-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: flex-start;
+    margin-bottom: 14px;
+  }
+
+  .section-head h2 {
+    margin: 0;
+    font-size: 1.1rem;
+  }
+
+  .section-head p {
+    margin-top: 8px;
+    color: var(--muted);
+    line-height: 1.55;
+  }
+
+  .pill {
+    color: var(--amber);
+    padding: 6px 10px;
+    background: rgba(186, 124, 51, 0.1);
+    border: 1px solid rgba(186, 124, 51, 0.14);
+  }
+
+  .embed > [data-method] {
+    min-height: 120px;
+  }
+
+  .embed.compact > [data-method] {
+    min-height: 64px;
+  }
+
+  .report {
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.56);
+    border: 1px solid rgba(68, 53, 36, 0.1);
+    padding: 16px;
+  }
+
+  .report [data-method] {
+    min-height: 180px;
+  }
+
+  @media (max-width: 1180px) {
+    .hero,
+    .grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<div class="shell">
+  <section class="hero">
+    <div class="panel hero-main">
+      <div class="eyebrow">Builder Compass / Photon</div>
+      <h1>Turn your builder profile into a money map.</h1>
+      <p class="lede">
+        Builder Compass stores your profile, classifies your AI-native builder archetype, and
+        researches how people like you are making money on the open web. TinyFish is used when you
+        explicitly rebuild, not every time you open the dashboard.
+      </p>
+
+      <div class="metrics">
+        <div class="metric">
+          <label>Fit overview</label>
+          <div data-method="fitOverview"></div>
+        </div>
+        <div class="metric">
+          <label>Money paths</label>
+          <div data-method="moneyPaths"></div>
+        </div>
+        <div class="metric">
+          <label>Builder report</label>
+          <div data-method="report"></div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="panel stack">
+      <div>
+        <h2 style="margin: 0">How it works</h2>
+        <p class="copy" style="margin-top: 10px">
+          Save once, inspect anytime. When your profile changes, update the saved input and rebuild
+          the research deliberately.
+        </p>
+      </div>
+      <div class="callout">
+        Bring your own TinyFish API key if you want live market research and open-web evidence.
+        Without it, Builder Compass still gives a heuristic builder model.
+      </div>
+      <div class="toolbar">
+        <button class="primary" data-method="runCompass" data-target="#report-panel">
+          Run full compass
+        </button>
+        <button class="secondary" data-method="analyzeIdentity" data-target="#identity-panel">
+          Refresh identity
+        </button>
+        <button class="secondary" data-method="researchMarket" data-target="#market-panel">
+          Refresh market
+        </button>
+      </div>
+    </aside>
+  </section>
+
+  <section class="grid">
+    <div class="column">
+      <div class="panel">
+        <div class="section-head">
+          <div>
+            <h2>Profile intake</h2>
+            <p>
+              Minimal input. Persistent state. This form updates the stored profile and clears stale
+              research when your self-model changes.
+            </p>
+          </div>
+          <div class="pill">Persistent</div>
+        </div>
+        <div class="embed">
+          <div data-method="saveProfile"></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="section-head">
+          <div>
+            <h2>Narrative report</h2>
+            <p>The reusable guide you can open later without paying the TinyFish cost again.</p>
+          </div>
+        </div>
+        <div class="report" id="report-panel">
+          <div data-method="report"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="column">
+      <div class="panel" id="identity-panel">
+        <div class="section-head">
+          <div>
+            <h2>Identity analysis</h2>
+            <p>
+              Builder archetype, strengths, work fit, and risks. Cached until you intentionally
+              rebuild.
+            </p>
+          </div>
+          <div class="pill">Profile model</div>
+        </div>
+        <div class="embed compact">
+          <div data-method="strengthMatrix"></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="section-head">
+          <div>
+            <h2>Fit dials</h2>
+            <p>
+              Quick read on AI-native leverage, founder energy, execution reliability, and risk
+              load.
+            </p>
+          </div>
+        </div>
+        <div class="embed compact">
+          <div data-method="fitOverview"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="column">
+      <div class="panel" id="market-panel">
+        <div class="section-head">
+          <div>
+            <h2>Money paths</h2>
+            <p>Research-backed routes ranked by fit, speed to money, demand, and sustainability.</p>
+          </div>
+          <div class="pill">Market map</div>
+        </div>
+        <div class="embed compact">
+          <div data-method="moneyPaths"></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="section-head">
+          <div>
+            <h2>Usage model</h2>
+            <p>Exactly the behavior we want for repeat use.</p>
+          </div>
+        </div>
+        <div class="callout">
+          Open the same profile any time to get the stored analysis back immediately.
+        </div>
+        <div class="callout" style="margin-top: 12px">
+          Update the profile only when you’ve actually changed, then rebuild identity and market
+          research.
+        </div>
+        <div class="callout warn" style="margin-top: 12px">
+          TinyFish is a rebuild engine here, not a page-refresh tax.
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

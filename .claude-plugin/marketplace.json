@@ -1,0 +1,30 @@
+{
+  "name": "builders-compass-marketplace",
+  "owner": {
+    "name": "Arul-"
+  },
+  "metadata": {
+    "description": "Official builders-compass MCP servers",
+    "version": "1.16.0"
+  },
+  "plugins": [
+    {
+      "name": "builder-compass",
+      "description": "Builder Compass",
+      "source": "./",
+      "strict": false,
+      "hooks": [
+        "./.claude-plugin/hooks.json"
+      ],
+      "mcpServers": {
+        "builder-compass": {
+          "command": "photon",
+          "args": [
+            "mcp",
+            "builder-compass"
+          ]
+        }
+      }
+    }
+  ]
+}
