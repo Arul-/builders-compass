@@ -158,6 +158,12 @@ interface TinyFishRunResponse {
   error?: { message?: string } | null;
 }
 
+interface TinyFishTask {
+  url: string;
+  goal: string;
+  browserProfile?: "lite" | "stealth";
+}
+
 export default class BuilderCompass {
   profile: BuilderProfile;
   identity: IdentityAnalysis;
@@ -892,9 +898,10 @@ export default class BuilderCompass {
   }
 
   private async _tinyfishIdentity(now: string): Promise<IdentityAnalysis> {
-    const searchPrompt = [
+    const heuristic = this._heuristicIdentity(now);
+    const researchContext = [
       `You are classifying an AI-native builder.`,
-      `Research the person using the provided links and profile details.`,
+      `Use only evidence visible from the current page and the provided builder context.`,
       `Return STRICT JSON with keys: title, identitySummary, archetypeTags, strengthTags, workFitTags, riskTags, moneyModeTags, evidence.`,
       `Allowed archetype tags: ${this._allTags<ArchetypeTag>([
         "ai-augmented-solo-builder",
@@ -957,12 +964,28 @@ export default class BuilderCompass {
       `Recent work: ${this.profile.recentWork}`,
       `Energizing work: ${this.profile.energizingWork}`,
       `Constraints: ${this.profile.constraints}`,
-      `Links: ${this.profile.links.join(", ") || "none"}`,
     ].join("\n");
+    const identityTasks: TinyFishTask[] = [
+      ...this.profile.links.slice(0, 3).map((link) => ({
+        url: link,
+        goal: `${researchContext}\nExtract builder evidence from this link and map it to the allowed tags.`,
+        browserProfile: this._browserProfileForUrl(link),
+      })),
+      {
+        url: `https://duckduckgo.com/?q=${encodeURIComponent(
+          `${this.profile.name} ${this.profile.headline} ${this.profile.recentWork}`.trim(),
+        )}`,
+        goal: `${researchContext}\nUse search results to find external evidence that supports or corrects the builder profile.`,
+        browserProfile: "lite",
+      },
+    ];
 
-    const parsed = await this._runTinyFishSearch(searchPrompt);
+    const parsed = this._mergeIdentityFindings(
+      await this._runTinyFishTasks(identityTasks),
+      heuristic,
+    );
     return {
-      ...this._heuristicIdentity(now),
+      ...heuristic,
       status: "tinyfish",
       title: String(parsed.title || "TinyFish builder profile"),
       identitySummary: String(
@@ -1069,7 +1092,8 @@ export default class BuilderCompass {
   }
 
   private async _tinyfishMarket(now: string): Promise<MarketResearch> {
-    const searchPrompt = [
+    const heuristic = this._heuristicMarket(now);
+    const marketPrompt = [
       `Research how people with this builder profile are making money right now on the open web.`,
       `Return STRICT JSON with keys: researchSummary, topPaths, avoidPaths, nextMoves, evidence.`,
       `Each topPaths item must include: title, category, fitScore, speedToMoney, marketDemand, sustainability, executionDifficulty, whyItFits, examples, channels, firstSteps, risks.`,
@@ -1082,11 +1106,36 @@ export default class BuilderCompass {
       `Recent work: ${this.profile.recentWork}`,
       `Constraints: ${this.profile.constraints}`,
       `Links: ${this.profile.links.join(", ") || "none"}`,
-      `Find realistic, current, internet-visible monetization paths with emphasis on quickest plausible route to money and strongest long-term compounding path.`,
+      `Prioritize current, internet-visible routes with evidence.`,
     ].join("\n");
+    const marketTasks: TinyFishTask[] = [
+      {
+        url: `https://duckduckgo.com/?q=${encodeURIComponent(
+          `${this.identity.archetypeTags.join(" ")} how to make money consulting productized service`,
+        )}`,
+        goal: `${marketPrompt}\nFind service-based monetization paths and return only grounded paths.`,
+        browserProfile: "lite",
+      },
+      {
+        url: `https://duckduckgo.com/?q=${encodeURIComponent(
+          `${this.identity.archetypeTags.join(" ")} indie hacker product revenue examples`,
+        )}`,
+        goal: `${marketPrompt}\nFind product and audience-led monetization paths with visible examples.`,
+        browserProfile: "lite",
+      },
+      {
+        url: `https://duckduckgo.com/?q=${encodeURIComponent(
+          `${this.profile.goalNow} ${this.identity.workFitTags.join(" ")} market demand opportunities`,
+        )}`,
+        goal: `${marketPrompt}\nFind the fastest plausible route to money given the goal and constraints.`,
+        browserProfile: "lite",
+      },
+    ];
 
-    const parsed = await this._runTinyFishSearch(searchPrompt);
-    const heuristic = this._heuristicMarket(now);
+    const parsed = this._mergeMarketFindings(
+      await this._runTinyFishTasks(marketTasks),
+      heuristic,
+    );
 
     return {
       status: "tinyfish",
@@ -1119,51 +1168,61 @@ export default class BuilderCompass {
     };
   }
 
-  private async _runTinyFishSearch(goal: string): Promise<any> {
-    const query = encodeURIComponent(
-      `${this.profile.headline} ${this.profile.goalNow} ${this.identity.archetypeTags.join(" ")} ways to make money`,
-    );
-    const response = await fetch(
-      "https://agent.tinyfish.ai/v1/automation/run-async",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-API-Key": this.tinyfishApiKey,
-        },
-        body: JSON.stringify({
-          url: `https://duckduckgo.com/?q=${query}`,
-          goal: `${goal}\nRespond in strict JSON only.`,
-          browser_profile: "lite",
-          api_integration: "builder-compass",
-        }),
-      },
-    );
-
-    if (!response.ok) {
-      throw new Error(`TinyFish run failed with ${response.status}`);
-    }
-
-    const started = (await response.json()) as TinyFishRunResponse;
-    if (!started.run_id) {
-      throw new Error(
-        started.error?.message || "TinyFish did not return a run ID",
-      );
-    }
-
-    const result = await this._pollTinyFishRun(started.run_id);
-    return this._extractJson(result);
+  private _browserProfileForUrl(url: string): "lite" | "stealth" {
+    return /linkedin\.com|x\.com|twitter\.com/i.test(url) ? "stealth" : "lite";
   }
 
-  private async _pollTinyFishRun(runId: string): Promise<any> {
+  private async _runTinyFishTasks(tasks: TinyFishTask[]): Promise<any[]> {
+    const runIds = (
+      await Promise.all(
+        tasks.map(async (task) => {
+          const response = await fetch(
+            "https://agent.tinyfish.ai/v1/automation/run-async",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "X-API-Key": this.tinyfishApiKey,
+              },
+              body: JSON.stringify({
+                url: task.url,
+                goal: `${task.goal}\nRespond in strict JSON only.`,
+                browser_profile: task.browserProfile || "lite",
+                api_integration: "builder-compass",
+              }),
+            },
+          );
+
+          if (!response.ok) {
+            throw new Error(`TinyFish run failed with ${response.status}`);
+          }
+
+          const started = (await response.json()) as TinyFishRunResponse;
+          if (!started.run_id) {
+            throw new Error(
+              started.error?.message || "TinyFish did not return a run ID",
+            );
+          }
+          return started.run_id;
+        }),
+      )
+    ).filter(Boolean) as string[];
+
+    return this._pollTinyFishRuns(runIds);
+  }
+
+  private async _pollTinyFishRuns(runIds: string[]): Promise<any[]> {
     for (let attempt = 0; attempt < 18; attempt++) {
       await new Promise((resolve) => setTimeout(resolve, 2500));
       const response = await fetch(
-        `https://agent.tinyfish.ai/v1/runs/${runId}`,
+        "https://agent.tinyfish.ai/v1/runs/batch",
         {
+          method: "POST",
           headers: {
+            "Content-Type": "application/json",
             "X-API-Key": this.tinyfishApiKey,
           },
+          body: JSON.stringify({ run_ids: runIds }),
         },
       );
 
@@ -1172,17 +1231,27 @@ export default class BuilderCompass {
       }
 
       const payload = (await response.json()) as Record<string, any>;
-      if (payload.status === "COMPLETED") {
-        return payload.result || payload.resultJson || payload;
-      }
-      if (payload.status === "FAILED" || payload.status === "CANCELLED") {
+      const runs = Array.isArray(payload.data) ? payload.data : [];
+      if (runs.length === 0) continue;
+      const finished = runs.filter(
+        (run) => run.status === "COMPLETED",
+      );
+      const failed = runs.filter(
+        (run) => run.status === "FAILED" || run.status === "CANCELLED",
+      );
+      if (failed.length > 0 && finished.length === 0) {
         throw new Error(
-          payload.error?.message || `TinyFish run ${payload.status}`,
+          failed[0]?.error?.message || `TinyFish run ${failed[0]?.status}`,
+        );
+      }
+      if (finished.length === runIds.length || attempt === 17) {
+        return finished.map((run) =>
+          this._extractJson(run.result || run.resultJson || run),
         );
       }
     }
 
-    throw new Error("TinyFish run timed out");
+    throw new Error("TinyFish runs timed out");
   }
 
   private _extractJson(value: any): any {
@@ -1360,5 +1429,84 @@ export default class BuilderCompass {
 
   private _allTags<T extends string>(items: T[]): string {
     return items.join(", ");
+  }
+
+  private _mergeIdentityFindings(
+    findings: any[],
+    fallback: IdentityAnalysis,
+  ): any {
+    const merged = {
+      title: "",
+      identitySummary: "",
+      archetypeTags: [] as string[],
+      strengthTags: [] as string[],
+      workFitTags: [] as string[],
+      riskTags: [] as string[],
+      moneyModeTags: [] as string[],
+      evidence: [] as any[],
+    };
+    for (const finding of findings) {
+      if (!finding || typeof finding !== "object") continue;
+      if (!merged.title && finding.title) merged.title = String(finding.title);
+      if (!merged.identitySummary && finding.identitySummary) {
+        merged.identitySummary = String(finding.identitySummary);
+      }
+      merged.archetypeTags.push(...this._stringArray(finding.archetypeTags));
+      merged.strengthTags.push(...this._stringArray(finding.strengthTags));
+      merged.workFitTags.push(...this._stringArray(finding.workFitTags));
+      merged.riskTags.push(...this._stringArray(finding.riskTags));
+      merged.moneyModeTags.push(...this._stringArray(finding.moneyModeTags));
+      if (Array.isArray(finding.evidence)) merged.evidence.push(...finding.evidence);
+    }
+
+    return {
+      title: merged.title || fallback.title,
+      identitySummary: merged.identitySummary || fallback.identitySummary,
+      archetypeTags: merged.archetypeTags,
+      strengthTags: merged.strengthTags,
+      workFitTags: merged.workFitTags,
+      riskTags: merged.riskTags,
+      moneyModeTags: merged.moneyModeTags,
+      evidence: merged.evidence,
+    };
+  }
+
+  private _mergeMarketFindings(
+    findings: any[],
+    fallback: MarketResearch,
+  ): any {
+    const topPaths: any[] = [];
+    const avoidPaths: string[] = [];
+    const nextMoves: string[] = [];
+    const evidence: any[] = [];
+    let researchSummary = "";
+
+    for (const finding of findings) {
+      if (!finding || typeof finding !== "object") continue;
+      if (!researchSummary && finding.researchSummary) {
+        researchSummary = String(finding.researchSummary);
+      }
+      if (Array.isArray(finding.topPaths)) topPaths.push(...finding.topPaths);
+      avoidPaths.push(...this._stringArray(finding.avoidPaths));
+      nextMoves.push(...this._stringArray(finding.nextMoves));
+      if (Array.isArray(finding.evidence)) evidence.push(...finding.evidence);
+    }
+
+    const dedupedPaths = topPaths
+      .map((path) => ({
+        ...path,
+        title: String(path.title || "Untitled path"),
+      }))
+      .filter((path, index, arr) =>
+        arr.findIndex((item) => item.title === path.title) === index,
+      );
+
+    return {
+      researchSummary: researchSummary || fallback.researchSummary,
+      topPaths: dedupedPaths,
+      avoidPaths,
+      nextMoves,
+      evidence,
+    };
   }
 }
