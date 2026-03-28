@@ -2,7 +2,7 @@
 
 Builder Compass
 
-> **10 tools** · API Photon · v1.16.0 · MIT
+> **11 tools** · API Photon · v1.16.0 · MIT
 
 **Platform Features:** `custom-ui` `stateful` `dashboard`
 
@@ -21,6 +21,7 @@ Builder Compass
 | Method | Description |
 |--------|-------------|
 | `main` | Open the Builder Compass dashboard |
+| `showCompass` | Show the interactive Builder Compass dashboard for the current saved state |
 | `captureProfile` | First-step MCP capture for Builder Compass. |
 | `saveProfile` | Save the builder profile that Builder Compass should reason from. |
 | `analyzeIdentity` | Analyze the builder's identity, strengths, work fit, and risks |
@@ -38,6 +39,17 @@ Builder Compass
 ### `main`
 
 Open the Builder Compass dashboard
+
+
+
+
+
+---
+
+
+### `showCompass`
+
+Show the interactive Builder Compass dashboard for the current saved state
 
 
 
@@ -157,24 +169,26 @@ flowchart LR
         PHOTON((🎯))
         T0[🔧 main]
         PHOTON --> T0
-        T1[🔧 captureProfile]
+        T1[🔧 showCompass]
         PHOTON --> T1
-        T2[✏️ saveProfile]
+        T2[🔧 captureProfile]
         PHOTON --> T2
-        T3[🔧 analyzeIdentity]
+        T3[✏️ saveProfile]
         PHOTON --> T3
-        T4[🔧 researchMarket]
+        T4[🔧 analyzeIdentity]
         PHOTON --> T4
-        T5[▶️ runCompass]
+        T5[🔧 researchMarket]
         PHOTON --> T5
-        T6[🔧 strengthMatrix]
+        T6[▶️ runCompass]
         PHOTON --> T6
-        T7[🔧 moneyPaths]
+        T7[🔧 strengthMatrix]
         PHOTON --> T7
-        T8[🔧 fitOverview]
+        T8[🔧 moneyPaths]
         PHOTON --> T8
-        T9[🔧 report]
+        T9[🔧 fitOverview]
         PHOTON --> T9
+        T10[🔧 report]
+        PHOTON --> T10
     end
 ```
 

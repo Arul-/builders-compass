@@ -51,14 +51,16 @@
     background: var(--canvas);
     color: var(--ink);
     font-family: var(--font-sans, "Inter", system-ui, sans-serif);
-    padding: 20px;
+    padding: 16px;
+    height: 100vh;
+    overflow-y: auto;
   }
 
   .shell {
     max-width: 1180px;
     margin: 0 auto;
     display: grid;
-    gap: 18px;
+    gap: 14px;
   }
 
   .panel {
@@ -66,12 +68,12 @@
     border: 1px solid var(--line);
     border-radius: var(--radius-xl);
     box-shadow: var(--shadow);
-    padding: 22px;
+    padding: 18px;
   }
 
   .hero {
     display: grid;
-    gap: 14px;
+    gap: 10px;
   }
 
   .eyebrow,
@@ -101,9 +103,9 @@
   }
 
   .hero h1 {
-    font-size: clamp(2rem, 4vw, 3.4rem);
-    line-height: 0.98;
-    max-width: 12ch;
+    font-size: clamp(1.4rem, 3vw, 2.2rem);
+    line-height: 1.05;
+    max-width: 16ch;
   }
 
   .copy {
@@ -342,7 +344,7 @@
           <div class="pill">Required first</div>
         </div>
         <div class="embed">
-          <div data-method="saveProfile"></div>
+          <div data-method="saveProfile" data-trigger="none"></div>
         </div>
       </div>
 
@@ -366,7 +368,7 @@
             and market research.
           </div>
           <div class="report">
-            <div data-method="main"></div>
+            <div id="snapshot-preview" class="copy" style="white-space: pre-wrap; font-size: 13px;"></div>
           </div>
         </div>
       </div>
@@ -393,7 +395,7 @@
           </button>
         </div>
         <div class="panel-slot">
-          <div data-method="strengthMatrix"></div>
+          <div data-method="strengthMatrix" data-trigger="none"></div>
         </div>
       </div>
 
@@ -409,7 +411,7 @@
             </div>
           </div>
           <div class="panel-slot">
-            <div data-method="fitOverview"></div>
+            <div data-method="fitOverview" data-trigger="none"></div>
           </div>
         </div>
 
@@ -421,7 +423,7 @@
             </div>
           </div>
           <div class="report">
-            <div data-method="report"></div>
+            <div data-method="report" data-trigger="none"></div>
           </div>
         </div>
       </div>
@@ -448,7 +450,7 @@
           <button data-method="runCompass">Run full compass</button>
         </div>
         <div class="panel-slot">
-          <div data-method="moneyPaths"></div>
+          <div data-method="moneyPaths" data-trigger="none"></div>
         </div>
       </div>
 
@@ -464,7 +466,7 @@
             </div>
           </div>
           <div class="report">
-            <div data-method="report"></div>
+            <div data-method="report" data-trigger="none"></div>
           </div>
         </div>
 
@@ -542,6 +544,21 @@
         ? "Available"
         : "Locked";
 
+    const preview = document.getElementById("snapshot-preview");
+    if (preview && state.snapshot) {
+      const p = state.snapshot.profile;
+      if (locks.profileReady) {
+        preview.textContent = [
+          p.name ? "Name: " + p.name : "",
+          p.headline ? "Headline: " + p.headline : "",
+          p.goalNow ? "Goal: " + p.goalNow : "",
+          p.recentWork ? "Recent work: " + p.recentWork : "",
+        ].filter(Boolean).join("\n");
+      } else {
+        preview.textContent = "No profile saved yet. Use the MCP client or method cards below to save a profile.";
+      }
+    }
+
     slots.tinyfishCallout.textContent = locks.tinyfishReady
       ? "TinyFish key detected. Builder Compass can run live profile and market research."
       : "TinyFish key not detected. Builder Compass can still show heuristic output, but the live research tabs are much stronger with TinyFish configured.";
@@ -563,7 +580,7 @@
     if (locks.profileReady && !locks.identityReady) {
       state.autoPhase = "identity";
       try {
-        state.snapshot = await builderCompass.analyzeIdentity();
+        state.snapshot = await photon.callTool('analyzeIdentity', {});
       } finally {
         state.autoPhase = "idle";
       }
@@ -573,7 +590,7 @@
     if (locks.identityReady && !locks.marketReady) {
       state.autoPhase = "market";
       try {
-        state.snapshot = await builderCompass.researchMarket();
+        state.snapshot = await photon.callTool('researchMarket', {});
       } finally {
         state.autoPhase = "idle";
       }

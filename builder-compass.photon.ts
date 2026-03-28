@@ -194,6 +194,14 @@ export default class BuilderCompass {
   }
 
   /**
+   * Show the interactive Builder Compass dashboard for the current saved state
+   * @ui app
+   */
+  async showCompass(): Promise<CompassSnapshot> {
+    return this._snapshot();
+  }
+
+  /**
    * First-step MCP capture for Builder Compass.
    *
    * Use this when the client already knows some facts about the builder from
@@ -322,6 +330,7 @@ export default class BuilderCompass {
 
   /**
    * Run the full builder compass flow end to end
+   * @ui app
    */
   async runCompass(): Promise<CompassSnapshot> {
     await this.analyzeIdentity();
