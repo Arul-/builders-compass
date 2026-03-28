@@ -618,7 +618,15 @@
   });
 
   updateTabs();
-  queueMicrotask(() => {
-    maybeAutoAdvance().catch(() => {});
-  });
+
+  // Fetch current state on load — Claude Desktop may not relay tool results
+  // to the iframe, so we proactively call main() to hydrate the UI
+  photon.callTool('main', {}).then((result) => {
+    if (!result) return;
+    state.snapshot = result;
+    const locks = getLocks(result);
+    if (locks.marketReady) state.activeTab = "market";
+    else if (locks.identityReady) state.activeTab = "identity";
+    updateTabs();
+  }).catch(() => {});
 </script>
