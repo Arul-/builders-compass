@@ -676,7 +676,7 @@
                 <input
                   id="tinyfishApiKey"
                   type="password"
-                  placeholder="Configure PHOTON_BUILDER_COMPASS_TINYFISHAPIKEY in your MCP client"
+                  placeholder="Configure BUILDER_COMPASS_TINYFISH_API_KEY in your MCP client"
                   disabled
                 />
               </label>
@@ -1185,7 +1185,7 @@
           `signal ${tinyfishReady ? "" : "warn"}`.trim();
         els.tinyfishCopy.textContent = tinyfishReady
           ? "TinyFish can now research your profile and current internet-visible money paths."
-          : "Heuristic mode works without a key. Configure PHOTON_BUILDER_COMPASS_TINYFISHAPIKEY in your MCP client to upgrade this into a real research engine.";
+          : "TinyFish is required for live research. Configure BUILDER_COMPASS_TINYFISH_API_KEY in your MCP client to activate Builder Compass.";
 
         renderTagCloud(els.archetypeTags, identity.archetypeTags, "");
         renderTagCloud(els.strengthTags, identity.strengthTags, "alt");

@@ -68,12 +68,19 @@ interface LinkEvidence {
 }
 
 interface ProfileInput {
+  /** Builder's real name or stable public handle. Prefer what the MCP client already knows. */
   name: string;
+  /** One-line current positioning statement. Keep it factual, not aspirational. */
   headline: string;
+  /** What the builder is optimizing for right now: income, startup wedge, specialization, etc. */
   goalNow: string;
+  /** Recent projects, shipped work, or repeated patterns the builder actually returns to. */
   recentWork: string;
+  /** What kinds of work generate energy rather than just status or obligation. */
   energizingWork: string;
+  /** Constraints that materially shape strategy: runway, time, geography, job pressure, etc. */
   constraints: string;
+  /** Public links the builder explicitly wants used as research anchors: GitHub, website, X, LinkedIn, product pages. */
   links: string[];
 }
 
@@ -156,7 +163,7 @@ export default class BuilderCompass {
   identity: IdentityAnalysis;
   market: MarketResearch;
 
-  constructor(private tinyfishApiKey = "") {
+  constructor(private tinyfishApiKey: string) {
     const now = new Date().toISOString();
     this.profile = {
       name: "",
@@ -181,7 +188,17 @@ export default class BuilderCompass {
   }
 
   /**
-   * Save the builder profile
+   * Save the builder profile that Builder Compass should reason from.
+   *
+   * MCP clients should treat this as the canonical capture contract:
+   * infer as much as possible from memory and recent conversation,
+   * ask the user only for missing high-value fields,
+   * and pass factual signals rather than flattering summaries.
+   *
+   * The goal is to capture the smallest truthful self-model that still supports:
+   * builder archetype classification,
+   * work-fit analysis,
+   * and market-path research.
    */
   async saveProfile(params: ProfileInput): Promise<CompassSnapshot> {
     const now = new Date().toISOString();

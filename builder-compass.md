@@ -11,7 +11,7 @@ Builder Compass
 
 | Variable | Required | Type | Description |
 |----------|----------|------|-------------|
-| `BUILDER_COMPASS_TINYFISHAPIKEY` | No | any | No description available |
+| `BUILDER_COMPASS_TINYFISHAPIKEY` | Yes | string | No description available |
 
 
 
@@ -21,7 +21,7 @@ Builder Compass
 | Method | Description |
 |--------|-------------|
 | `main` | Open the Builder Compass dashboard |
-| `saveProfile` | Save the builder profile |
+| `saveProfile` | Save the builder profile that Builder Compass should reason from. |
 | `analyzeIdentity` | Analyze the builder's identity, strengths, work fit, and risks |
 | `researchMarket` | Research how people with this profile are making money right now |
 | `runCompass` | Run the full builder compass flow end to end |
@@ -47,7 +47,7 @@ Open the Builder Compass dashboard
 
 ### `saveProfile`
 
-Save the builder profile
+Save the builder profile that Builder Compass should reason from. MCP clients should treat this as the canonical capture contract: infer as much as possible from memory and recent conversation, ask the user only for missing high-value fields, and pass factual signals rather than flattering summaries. The goal is to capture the smallest truthful self-model that still supports: builder archetype classification, work-fit analysis, and market-path research.
 
 
 
