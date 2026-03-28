@@ -1,80 +1,77 @@
 <style>
   :root {
-    --canvas: #f4eddf;
-    --ink: #201d18;
-    --muted: #6c665d;
-    --olive: #38452f;
-    --sage: #6f8d62;
-    --amber: #ba7c33;
-    --rust: #9d5a42;
-    --card: rgba(255, 251, 244, 0.92);
-    --line: rgba(68, 53, 36, 0.12);
-    --shadow: 0 18px 48px rgba(54, 38, 17, 0.1);
-    --radius-xl: 28px;
-    --radius-lg: 20px;
-    --radius-md: 16px;
+    --canvas: var(--color-background-primary, var(--color-bg, #ffffff));
+    --canvas-elevated: var(
+      --color-background-secondary,
+      var(--color-bg-elevated, rgba(255, 255, 255, 0.92))
+    );
+    --canvas-soft: var(
+      --color-background-tertiary,
+      var(--color-bg-subtle, rgba(255, 255, 255, 0.72))
+    );
+    --ink: var(--color-text-primary, var(--color-text, #201d18));
+    --muted: var(--color-text-secondary, var(--color-text-muted, #6c665d));
+    --accent: var(--color-text-info, var(--color-accent, #38452f));
+    --success: var(--color-text-success, var(--color-success, #6f8d62));
+    --warning: var(--color-text-warning, var(--color-warning, #ba7c33));
+    --danger: var(--color-text-danger, var(--color-error, #9d5a42));
+    --line: var(
+      --color-border-primary,
+      var(--color-border, rgba(68, 53, 36, 0.12))
+    );
+    --line-soft: var(--color-border-secondary, rgba(68, 53, 36, 0.08));
+    --accent-bg: var(
+      --color-background-info,
+      color-mix(in srgb, var(--accent) 12%, transparent)
+    );
+    --success-bg: var(
+      --color-background-success,
+      color-mix(in srgb, var(--success) 12%, transparent)
+    );
+    --warning-bg: var(
+      --color-background-warning,
+      color-mix(in srgb, var(--warning) 12%, transparent)
+    );
+    --danger-bg: var(
+      --color-background-danger,
+      color-mix(in srgb, var(--danger) 10%, transparent)
+    );
+    --shadow: 0 18px 48px color-mix(in srgb, var(--ink) 10%, transparent);
+    --radius-xl: 24px;
+    --radius-lg: 18px;
+    --radius-md: 14px;
+  }
+
+  * {
+    box-sizing: border-box;
   }
 
   body {
-    background:
-      radial-gradient(
-        circle at top left,
-        rgba(111, 141, 98, 0.14),
-        transparent 24%
-      ),
-      radial-gradient(
-        circle at top right,
-        rgba(186, 124, 51, 0.12),
-        transparent 20%
-      ),
-      linear-gradient(180deg, #f8f1e7 0%, var(--canvas) 44%, #ecdfcb 100%);
+    margin: 0;
+    background: var(--canvas);
     color: var(--ink);
-    font-family: "Inter", system-ui, sans-serif;
-    padding: 24px;
+    font-family: var(--font-sans, "Inter", system-ui, sans-serif);
+    padding: 20px;
   }
 
   .shell {
-    display: grid;
-    gap: 18px;
-  }
-
-  .hero,
-  .grid {
-    display: grid;
-    gap: 18px;
-  }
-
-  .hero {
-    grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.82fr);
-  }
-
-  .grid {
-    grid-template-columns: minmax(320px, 0.9fr) minmax(400px, 1.1fr) minmax(
-        320px,
-        0.92fr
-      );
-    align-items: start;
-  }
-
-  .column {
+    max-width: 1180px;
+    margin: 0 auto;
     display: grid;
     gap: 18px;
   }
 
   .panel {
-    background: linear-gradient(
-      180deg,
-      rgba(255, 252, 247, 0.94),
-      rgba(249, 241, 229, 0.96)
-    );
+    background: linear-gradient(180deg, var(--canvas-elevated), var(--canvas-soft));
     border: 1px solid var(--line);
     border-radius: var(--radius-xl);
     box-shadow: var(--shadow);
     padding: 22px;
   }
 
-  .hero-main {
-    padding: 28px;
+  .hero {
+    display: grid;
+    gap: 14px;
   }
 
   .eyebrow,
@@ -84,66 +81,40 @@
     gap: 8px;
     border-radius: 999px;
     font:
-      500 12px/1 ui-monospace,
-      SFMono-Regular,
-      Menlo,
+      600 12px/1 var(--font-mono, ui-monospace),
       monospace;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.05em;
     text-transform: uppercase;
   }
 
   .eyebrow {
-    color: var(--olive);
     padding: 7px 12px;
-    border: 1px solid rgba(56, 69, 47, 0.14);
-    background: rgba(56, 69, 47, 0.08);
+    background: var(--accent-bg);
+    border: 1px solid var(--line);
+    color: var(--accent);
   }
 
-  .hero-main h1 {
-    margin-top: 14px;
-    font-size: clamp(2.1rem, 5vw, 4rem);
-    line-height: 0.96;
-    font-weight: 800;
-    max-width: 11ch;
+  h1,
+  h2,
+  h3 {
+    margin: 0;
   }
 
-  .lede,
+  .hero h1 {
+    font-size: clamp(2rem, 4vw, 3.4rem);
+    line-height: 0.98;
+    max-width: 12ch;
+  }
+
   .copy {
     color: var(--muted);
-    line-height: 1.6;
+    line-height: 1.65;
   }
 
-  .lede {
-    margin-top: 16px;
-    max-width: 64ch;
-    font-size: 1rem;
-  }
-
-  .metrics {
-    margin-top: 24px;
+  .hero-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 12px;
-  }
-
-  .metric {
-    background: rgba(255, 255, 255, 0.58);
-    border: 1px solid rgba(68, 53, 36, 0.1);
-    border-radius: 18px;
-    padding: 16px;
-  }
-
-  .metric label {
-    display: block;
-    color: var(--muted);
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    margin-bottom: 8px;
-  }
-
-  .metric [data-method] {
-    min-height: 0;
+    grid-template-columns: minmax(0, 1.3fr) minmax(300px, 0.8fr);
+    gap: 18px;
   }
 
   .stack {
@@ -151,41 +122,87 @@
     gap: 12px;
   }
 
-  .toolbar {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-
-  .toolbar button,
-  button[data-method] {
-    border-radius: 16px;
-    padding: 12px 16px;
-    font-weight: 600;
-  }
-
-  .primary {
-    background: linear-gradient(135deg, #38452f, #526647);
-    color: #f7f3ec;
-  }
-
-  .secondary {
-    background: rgba(255, 255, 255, 0.62);
-    color: var(--ink);
-    border: 1px solid rgba(68, 53, 36, 0.12);
-  }
-
   .callout {
     padding: 16px;
-    border-radius: 18px;
-    background: rgba(111, 141, 98, 0.08);
-    border: 1px solid rgba(111, 141, 98, 0.14);
+    border-radius: var(--radius-lg);
+    background: var(--accent-bg);
+    border: 1px solid var(--line);
     color: var(--muted);
   }
 
-  .warn {
-    background: rgba(157, 90, 66, 0.08);
-    border-color: rgba(157, 90, 66, 0.14);
+  .callout.warn {
+    background: var(--danger-bg);
+    border-color: var(--color-border-danger, var(--line));
+  }
+
+  .metrics {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .metric {
+    padding: 16px;
+    border-radius: var(--radius-lg);
+    background: var(--canvas-soft);
+    border: 1px solid var(--line-soft);
+  }
+
+  .metric label {
+    display: block;
+    color: var(--muted);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .metric [data-slot] {
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+
+  .tabs {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .tab-button {
+    border: 1px solid var(--line);
+    background: var(--canvas-soft);
+    color: var(--ink);
+    border-radius: 999px;
+    padding: 10px 14px;
+    cursor: pointer;
+    font-weight: 600;
+  }
+
+  .tab-button.active {
+    background: var(--accent);
+    color: var(--color-text-inverse, #fff);
+    border-color: transparent;
+  }
+
+  .tab-button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  .tab-panel {
+    display: none;
+    gap: 18px;
+  }
+
+  .tab-panel.active {
+    display: grid;
+  }
+
+  .content-grid {
+    display: grid;
+    grid-template-columns: minmax(320px, 0.9fr) minmax(0, 1.1fr);
+    gap: 18px;
+    align-items: start;
   }
 
   .section-head {
@@ -196,11 +213,6 @@
     margin-bottom: 14px;
   }
 
-  .section-head h2 {
-    margin: 0;
-    font-size: 1.1rem;
-  }
-
   .section-head p {
     margin-top: 8px;
     color: var(--muted);
@@ -208,118 +220,126 @@
   }
 
   .pill {
-    color: var(--amber);
+    color: var(--warning);
     padding: 6px 10px;
-    background: rgba(186, 124, 51, 0.1);
-    border: 1px solid rgba(186, 124, 51, 0.14);
+    background: var(--warning-bg);
+    border: 1px solid var(--color-border-warning, var(--line));
   }
 
-  .embed > [data-method] {
+  .embed,
+  .report,
+  .panel-slot {
     min-height: 120px;
-  }
-
-  .embed.compact > [data-method] {
-    min-height: 64px;
-  }
-
-  .report {
-    border-radius: 18px;
-    background: rgba(255, 255, 255, 0.56);
-    border: 1px solid rgba(68, 53, 36, 0.1);
+    border-radius: var(--radius-lg);
+    background: var(--canvas-soft);
+    border: 1px solid var(--line-soft);
     padding: 16px;
   }
 
-  .report [data-method] {
+  .report {
     min-height: 180px;
   }
 
-  @media (max-width: 1180px) {
-    .hero,
-    .grid {
+  .toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .toolbar button {
+    border-radius: 14px;
+    padding: 11px 15px;
+    border: 1px solid var(--line);
+    background: var(--canvas-soft);
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  .toolbar .primary {
+    background: var(--accent);
+    color: var(--color-text-inverse, #fff);
+    border-color: transparent;
+  }
+
+  .empty {
+    padding: 16px;
+    border-radius: var(--radius-lg);
+    border: 1px dashed var(--line);
+    color: var(--muted);
+    background: var(--canvas-soft);
+  }
+
+  @media (max-width: 980px) {
+    .hero-grid,
+    .content-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .metrics {
       grid-template-columns: 1fr;
     }
   }
 </style>
 
 <div class="shell">
-  <section class="hero">
-    <div class="panel hero-main">
-      <div class="eyebrow">Builder Compass / Photon</div>
-      <h1>Turn your builder profile into a money map.</h1>
-      <p class="lede">
-        Builder Compass stores your profile, classifies your AI-native builder
-        archetype, and researches how people like you are making money on the
-        open web. TinyFish is used when you explicitly rebuild, not every time
-        you open the dashboard.
-      </p>
-
-      <div class="metrics">
-        <div class="metric">
-          <label>Fit overview</label>
-          <div data-method="fitOverview"></div>
+  <section class="panel hero">
+    <div class="eyebrow">Builder Compass / MCP-first</div>
+    <div class="hero-grid">
+      <div class="stack">
+        <h1>Turn builder intel into a plan of action.</h1>
+        <p class="copy">
+          The MCP client brings the first layer of user intel. Builder Compass
+          turns that into a profile, then uses TinyFish to research how
+          successful builders with that profile are winning on the open web.
+        </p>
+        <div class="metrics">
+          <div class="metric">
+            <label>Profile</label>
+            <div data-slot="profile-state">Awaiting</div>
+          </div>
+          <div class="metric">
+            <label>Identity</label>
+            <div data-slot="identity-state">Locked</div>
+          </div>
+          <div class="metric">
+            <label>Market</label>
+            <div data-slot="market-state">Locked</div>
+          </div>
         </div>
-        <div class="metric">
-          <label>Money paths</label>
-          <div data-method="moneyPaths"></div>
+      </div>
+      <div class="stack">
+        <div class="callout">
+          Save the profile first. Identity and Market unlock only after the
+          earlier steps are complete.
         </div>
-        <div class="metric">
-          <label>Builder report</label>
-          <div data-method="report"></div>
+        <div class="callout" id="tinyfish-callout">
+          TinyFish key not detected. Builder Compass can still show heuristic
+          output, but the real market pass depends on live TinyFish research.
         </div>
       </div>
     </div>
-
-    <aside class="panel stack">
-      <div>
-        <h2 style="margin: 0">How it works</h2>
-        <p class="copy" style="margin-top: 10px">
-          Save once, inspect anytime. When your profile changes, update the
-          saved input and rebuild the research deliberately.
-        </p>
-      </div>
-      <div class="callout">
-        Bring your TinyFish API key through MCP env config. Set
-        <code>BUILDER_COMPASS_TINYFISH_API_KEY</code> in your MCP client to
-        activate Builder Compass research.
-      </div>
-      <div class="toolbar">
-        <button
-          class="primary"
-          data-method="runCompass"
-          data-target="#report-panel"
-        >
-          Run full compass
-        </button>
-        <button
-          class="secondary"
-          data-method="analyzeIdentity"
-          data-target="#identity-panel"
-        >
-          Refresh identity
-        </button>
-        <button
-          class="secondary"
-          data-method="researchMarket"
-          data-target="#market-panel"
-        >
-          Refresh market
-        </button>
-      </div>
-    </aside>
   </section>
 
-  <section class="grid">
-    <div class="column">
+  <section class="panel">
+    <div class="tabs">
+      <button class="tab-button active" data-tab="profile">1. Profile</button>
+      <button class="tab-button" data-tab="identity" disabled>2. Identity</button>
+      <button class="tab-button" data-tab="market" disabled>3. Market</button>
+    </div>
+  </section>
+
+  <section class="tab-panel active" data-panel="profile">
+    <div class="content-grid">
       <div class="panel">
         <div class="section-head">
           <div>
             <h2>Profile intake</h2>
             <p>
-              Minimal input. Persistent state. This form updates the stored
-              profile and clears stale research when your self-model changes.
+              The client should pass a compact factual builder profile. Save it
+              once, then come back to the same instance any time.
             </p>
           </div>
-          <div class="pill">Persistent</div>
+          <div class="pill">Required first</div>
         </div>
         <div class="embed">
           <div data-method="saveProfile"></div>
@@ -329,88 +349,228 @@
       <div class="panel">
         <div class="section-head">
           <div>
-            <h2>Narrative report</h2>
+            <h2>What this tab does</h2>
             <p>
-              The reusable guide you can open later without paying the TinyFish
-              cost again.
+              This is the input Builder Compass depends on before it can
+              classify identity or research the market.
             </p>
           </div>
         </div>
-        <div class="report" id="report-panel">
-          <div data-method="report"></div>
+        <div class="stack">
+          <div class="callout">
+            The MCP client should infer as much as possible from memory and
+            recent conversation, then ask only for missing high-value facts.
+          </div>
+          <div class="callout">
+            Saving a changed profile intentionally invalidates stale identity
+            and market research.
+          </div>
+          <div class="report">
+            <div data-method="main"></div>
+          </div>
         </div>
       </div>
     </div>
+  </section>
 
-    <div class="column">
-      <div class="panel" id="identity-panel">
+  <section class="tab-panel" data-panel="identity">
+    <div class="content-grid">
+      <div class="panel">
         <div class="section-head">
           <div>
             <h2>Identity analysis</h2>
             <p>
-              Builder archetype, strengths, work fit, and risks. Cached until
-              you intentionally rebuild.
+              Builder archetype, strengths, work fit, and risk pattern. Rebuild
+              this only when the profile changes or you want refreshed TinyFish
+              evidence.
             </p>
           </div>
-          <div class="pill">Profile model</div>
+          <div class="pill">Unlocked after profile</div>
         </div>
-        <div class="embed compact">
+        <div class="toolbar" style="margin-bottom: 14px">
+          <button class="primary" data-method="analyzeIdentity">
+            Analyze profile
+          </button>
+        </div>
+        <div class="panel-slot">
           <div data-method="strengthMatrix"></div>
         </div>
       </div>
 
-      <div class="panel">
-        <div class="section-head">
-          <div>
-            <h2>Fit dials</h2>
-            <p>
-              Quick read on AI-native leverage, founder energy, execution
-              reliability, and risk load.
-            </p>
+      <div class="stack">
+        <div class="panel">
+          <div class="section-head">
+            <div>
+              <h2>Fit overview</h2>
+              <p>
+                Quick read on leverage, execution reliability, founder energy,
+                and risk load.
+              </p>
+            </div>
+          </div>
+          <div class="panel-slot">
+            <div data-method="fitOverview"></div>
           </div>
         </div>
-        <div class="embed compact">
-          <div data-method="fitOverview"></div>
+
+        <div class="panel">
+          <div class="section-head">
+            <div>
+              <h2>Identity report</h2>
+              <p>Summary output after Builder Compass classifies the profile.</p>
+            </div>
+          </div>
+          <div class="report">
+            <div data-method="report"></div>
+          </div>
         </div>
       </div>
     </div>
+  </section>
 
-    <div class="column">
-      <div class="panel" id="market-panel">
+  <section class="tab-panel" data-panel="market">
+    <div class="content-grid">
+      <div class="panel">
         <div class="section-head">
           <div>
-            <h2>Money paths</h2>
+            <h2>Market research</h2>
             <p>
-              Research-backed routes ranked by fit, speed to money, demand, and
-              sustainability.
+              TinyFish researches how successful builders of this type are
+              positioning themselves, getting clients, or selling products.
             </p>
           </div>
-          <div class="pill">Market map</div>
+          <div class="pill">Unlocked after identity</div>
         </div>
-        <div class="embed compact">
+        <div class="toolbar" style="margin-bottom: 14px">
+          <button class="primary" data-method="researchMarket">
+            Research market
+          </button>
+          <button data-method="runCompass">Run full compass</button>
+        </div>
+        <div class="panel-slot">
           <div data-method="moneyPaths"></div>
         </div>
       </div>
 
-      <div class="panel">
-        <div class="section-head">
-          <div>
-            <h2>Usage model</h2>
-            <p>Exactly the behavior we want for repeat use.</p>
+      <div class="stack">
+        <div class="panel">
+          <div class="section-head">
+            <div>
+              <h2>Strategic guide</h2>
+              <p>
+                This is the reusable narrative output you come back to after the
+                research is done.
+              </p>
+            </div>
+          </div>
+          <div class="report">
+            <div data-method="report"></div>
           </div>
         </div>
-        <div class="callout">
-          Open the same profile any time to get the stored analysis back
-          immediately.
-        </div>
-        <div class="callout" style="margin-top: 12px">
-          Update the profile only when you’ve actually changed, then rebuild
-          identity and market research.
-        </div>
-        <div class="callout warn" style="margin-top: 12px">
-          TinyFish is a rebuild engine here, not a page-refresh tax.
+
+        <div class="panel">
+          <div class="section-head">
+            <div>
+              <h2>Usage model</h2>
+              <p>Builder Compass is meant to be stateful and reusable.</p>
+            </div>
+          </div>
+          <div class="callout">
+            Open the same instance any time to get the stored profile and
+            results back instantly.
+          </div>
+          <div class="callout warn" style="margin-top: 12px">
+            TinyFish should be treated as a deliberate rebuild step, not a
+            page-refresh tax.
+          </div>
         </div>
       </div>
     </div>
   </section>
 </div>
+
+<script>
+  const state = {
+    snapshot: photon.toolOutput || null,
+    activeTab: "profile",
+  };
+
+  const tabButtons = Array.from(document.querySelectorAll("[data-tab]"));
+  const tabPanels = Array.from(document.querySelectorAll("[data-panel]"));
+  const slots = {
+    profile: document.querySelector('[data-slot="profile-state"]'),
+    identity: document.querySelector('[data-slot="identity-state"]'),
+    market: document.querySelector('[data-slot="market-state"]'),
+    tinyfishCallout: document.getElementById("tinyfish-callout"),
+  };
+
+  function getLocks(snapshot) {
+    const ready = snapshot?.readyState || {};
+    return {
+      profileReady: Boolean(ready.hasProfile),
+      identityReady: Boolean(ready.hasIdentity),
+      marketReady: Boolean(ready.hasMarket),
+      tinyfishReady: Boolean(snapshot?.apiKeyConfigured),
+    };
+  }
+
+  function updateTabs() {
+    const locks = getLocks(state.snapshot);
+    tabButtons.forEach((button) => {
+      const tab = button.dataset.tab;
+      const locked =
+        (tab === "identity" && !locks.profileReady) ||
+        (tab === "market" && !locks.identityReady);
+      button.disabled = locked;
+      button.classList.toggle("active", tab === state.activeTab);
+    });
+
+    tabPanels.forEach((panel) => {
+      panel.classList.toggle("active", panel.dataset.panel === state.activeTab);
+    });
+
+    slots.profile.textContent = locks.profileReady ? "Saved" : "Awaiting";
+    slots.identity.textContent = locks.identityReady
+      ? "Ready"
+      : locks.profileReady
+        ? "Available"
+        : "Locked";
+    slots.market.textContent = locks.marketReady
+      ? "Ready"
+      : locks.identityReady
+        ? "Available"
+        : "Locked";
+
+    slots.tinyfishCallout.textContent = locks.tinyfishReady
+      ? "TinyFish key detected. Builder Compass can run live profile and market research."
+      : "TinyFish key not detected. Builder Compass can still show heuristic output, but the live research tabs are much stronger with TinyFish configured.";
+    slots.tinyfishCallout.classList.toggle("warn", !locks.tinyfishReady);
+  }
+
+  function activateTab(tab) {
+    const locks = getLocks(state.snapshot);
+    if (tab === "identity" && !locks.profileReady) return;
+    if (tab === "market" && !locks.identityReady) return;
+    state.activeTab = tab;
+    updateTabs();
+  }
+
+  tabButtons.forEach((button) => {
+    button.addEventListener("click", () => activateTab(button.dataset.tab));
+  });
+
+  photon.onResult((result) => {
+    if (!result) return;
+    state.snapshot = result;
+    const locks = getLocks(result);
+    if (locks.marketReady) state.activeTab = "market";
+    else if (locks.identityReady) state.activeTab = "identity";
+    updateTabs();
+  });
+
+  photon.onThemeChange(() => {
+    document.documentElement.dataset.theme = photon.theme;
+  });
+
+  updateTabs();
+</script>

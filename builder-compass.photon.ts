@@ -3,7 +3,7 @@
  * @description Discover your strongest AI-native builder profile, research how people like you make money, and get an evidence-backed next-step roadmap.
  * @icon 🧭
  * @stateful
- * @ui app ./ui/builder-compass.html
+ * @ui app ./ui/builder-compass.photon.html
  */
 
 type ArchetypeTag =
@@ -966,7 +966,7 @@ export default class BuilderCompass {
       `Constraints: ${this.profile.constraints}`,
     ].join("\n");
     const identityTasks: TinyFishTask[] = [
-      ...this.profile.links.slice(0, 3).map((link) => ({
+      ...this.profile.links.slice(0, 2).map((link) => ({
         url: link,
         goal: `${researchContext}\nExtract builder evidence from this link and map it to the allowed tags.`,
         browserProfile: this._browserProfileForUrl(link),
@@ -1123,13 +1123,6 @@ export default class BuilderCompass {
         goal: `${marketPrompt}\nFind product and audience-led monetization paths with visible examples.`,
         browserProfile: "lite",
       },
-      {
-        url: `https://duckduckgo.com/?q=${encodeURIComponent(
-          `${this.profile.goalNow} ${this.identity.workFitTags.join(" ")} market demand opportunities`,
-        )}`,
-        goal: `${marketPrompt}\nFind the fastest plausible route to money given the goal and constraints.`,
-        browserProfile: "lite",
-      },
     ];
 
     const parsed = this._mergeMarketFindings(
@@ -1212,8 +1205,8 @@ export default class BuilderCompass {
   }
 
   private async _pollTinyFishRuns(runIds: string[]): Promise<any[]> {
-    for (let attempt = 0; attempt < 18; attempt++) {
-      await new Promise((resolve) => setTimeout(resolve, 2500));
+    for (let attempt = 0; attempt < 12; attempt++) {
+      await new Promise((resolve) => setTimeout(resolve, 1500));
       const response = await fetch(
         "https://agent.tinyfish.ai/v1/runs/batch",
         {
@@ -1244,7 +1237,7 @@ export default class BuilderCompass {
           failed[0]?.error?.message || `TinyFish run ${failed[0]?.status}`,
         );
       }
-      if (finished.length === runIds.length || attempt === 17) {
+      if (finished.length === runIds.length || attempt === 11) {
         return finished.map((run) =>
           this._extractJson(run.result || run.resultJson || run),
         );

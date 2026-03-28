@@ -6,7 +6,56 @@
 
 Builder Compass is a Photon-native strategy agent for AI-era builders, powered by [TinyFish](https://github.com/tinyfish-io), built with [OpenAI Codex](https://github.com/openai/codex), and delivered through [Photon](https://github.com/portel-dev/photon).
 
-It takes a compact profile, uses TinyFish to research what people with that profile are actually doing on the open web, and turns that into a practical path to money, leverage, and focus.
+It does not start from a blank form.
+
+Builder Compass starts from the fact that modern chat clients already know a lot about the user. The MCP client acts as the first intelligence layer: it infers what it can from memory and recent conversation, asks only for missing high-value facts, and passes that compact truth into Builder Compass as MCP parameters.
+
+From there, Builder Compass turns that first layer of intel into a structured builder profile, then uses TinyFish to research how people with that same profile are actually succeeding on the open web. The result is not a personality report. It is a practical plan of action for the builder.
+
+## Core Flow
+
+Builder Compass works in two intelligence passes.
+
+### Pass 1: Client-side builder intel
+
+The MCP client already has context the product should not throw away:
+
+- ongoing conversation context
+- remembered preferences and goals
+- repeated interests
+- recent projects and frustrations
+- self-description the user has already given elsewhere
+
+That context gets compressed into factual MCP parameters such as:
+
+- name
+- headline
+- goal now
+- recent work
+- energizing work
+- constraints
+- public links
+
+This is the first important design choice: the user is not asked to fill in a giant questionnaire when the client already has useful context.
+
+### Pass 2: TinyFish market intelligence
+
+Once Builder Compass has the compact profile, [TinyFish](https://github.com/tinyfish-io) becomes the second intelligence layer.
+
+TinyFish is used to:
+
+- research the builder's public footprint
+- classify the builder into a concrete profile
+- find how successful people with that profile are making money
+- surface real-world monetization patterns, channels, and paths
+- feed that evidence back into the final plan
+
+The final answer is therefore built from:
+
+1. user intel supplied by the MCP client
+2. builder-profile classification
+3. open-web market intelligence gathered by TinyFish
+4. strategy synthesis and presentation inside Builder Compass
 
 ## Why TinyFish Is The Center Of This
 
@@ -16,7 +65,7 @@ TinyFish is what makes it real:
 
 - it researches the builder's public footprint from the links they choose to share
 - it maps that profile to real market activity on the live web
-- it finds how similar people are positioning themselves and making money
+- it finds how successful people with the same builder profile are positioning themselves and making money
 - it gives Builder Compass evidence-backed paths instead of motivational fluff
 
 TinyFish's official positioning is "enterprise infrastructure for AI web agents" and "1,000 operations. One API." Builder Compass uses that strength in a focused, personal way: not to scrape random websites for vanity data, but to help a builder understand which paths are realistic, fast, and aligned.
@@ -37,13 +86,14 @@ Builder Compass exists because these three pieces fit together unusually well:
 - Codex accelerates "how do we build and refine this product fast?"
 - Photon simplifies "how do we turn it into a usable MCP with state and UI?"
 
-## What Builder Compass Gives You
+## What Builder Compass Actually Produces
 
 Builder Compass produces a reusable strategic profile, not a one-off answer.
 
 - a saved builder profile per stateful instance
 - a classified builder archetype
 - strengths, work-fit, and risk tags
+- evidence about what builders of that type are doing successfully
 - ranked money paths
 - a practical next-step roadmap
 - a UI-first dashboard that can be driven from Beam or any MCP client
@@ -71,26 +121,20 @@ The goal is to feel like a personal operating manual:
 > This is where people like you are winning.  
 > This is what you should do next.
 
-## Why This Is Useful
+## What Makes It Useful
 
-Most people already have signals about themselves scattered across:
+Most strategy tools ask the user to explain themselves from scratch.
 
-- chat history and AI memory
-- GitHub
-- personal sites
-- LinkedIn
-- X
-- project pages
+Builder Compass assumes that is wasteful.
 
-Builder Compass turns those fragments into action.
+The chat client already holds a lot of the right context. The job of Builder Compass is not to make the user retype their life. The job is:
 
-Instead of asking a person to answer a giant questionnaire, the MCP client can infer a lot, ask for only missing high-value fields, and pass a compact factual profile into the photon.
+1. extract the most relevant builder intel through MCP parameters
+2. shape it into a clean profile
+3. research what success looks like for that profile on the open web
+4. turn that into an action plan
 
-Then TinyFish does the hard part:
-
-1. understand what kind of builder this person is
-2. research how similar people are making money on the internet
-3. return the best-fit paths with evidence
+That is why the output is more useful than a generic “career guidance” response. It is grounded in both the user's actual context and market-visible evidence.
 
 ## Install
 
@@ -121,7 +165,8 @@ This is the main experience and the path used for the demo.
 - install the photon
 - add the generated MCP config to your client
 - pass `BUILDER_COMPASS_TINYFISH_API_KEY` through the MCP env config
-- let the client capture a compact profile and drive the workflow
+- let the MCP client infer and pass the compact builder profile
+- let Builder Compass run TinyFish-backed research and return the action plan
 
 ### Beam UI
 
@@ -179,7 +224,7 @@ For MCP clients, the most reliable path is still setting the env directly in the
 
 ### 1. Save a compact builder profile
 
-The profile is intentionally small and factual:
+The profile is intentionally small and factual, because the MCP client is expected to bring the first layer of intel:
 
 - name
 - headline
@@ -203,7 +248,7 @@ Builder Compass classifies:
 
 TinyFish looks outward:
 
-- what people like this are selling
+- what successful builders of this profile are selling
 - where they position themselves
 - which paths look crowded
 - which routes look fast to money
@@ -226,8 +271,9 @@ Builder Compass is not trying to replace judgment.
 
 It is a strategy layer between:
 
-- what you have actually done
-- what the web says is working
+- what the MCP client already knows about you
+- what your compact builder profile says about your real wiring
+- what the web says is working for builders like you
 - what seems aligned for you right now
 
 That is why the combination matters:
@@ -286,10 +332,10 @@ Builder Compass could stay as one stateful photon with custom UI and a clean ins
 
 Builder Compass is best shown as:
 
-1. a user provides a compact profile
-2. TinyFish researches what that profile means on the live web
-3. Builder Compass renders the strategic guide
-4. the user leaves with a clearer path to money and focus
+1. the MCP client supplies compact builder intel
+2. Builder Compass converts that into a clean profile
+3. TinyFish researches how successful builders with that profile are winning
+4. Builder Compass renders a strategic guide and next-step plan
 
 ## Credit
 
